@@ -33,7 +33,7 @@ Generate makefiles and build:
 ```
 cmake -DCMAKE_BUILD_TYPE=RelWithDebugInfo ..
 make publish
-make
+make -j 4
 ```
 
 Or use generator of your choice
