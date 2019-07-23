@@ -67,7 +67,7 @@
 	db.transactionStatuses.getIndexes();
 })();
 
-load('mongoAccountPropertiesDbPrepare.js')
+load('mongoAccountRestrictionsDbPrepare.js')
 load('mongoLockInfoDbPrepare.js')
 load('mongoMosaicDbPrepare.js')
 load('mongoMultisigDbPrepare.js')
