@@ -11,6 +11,7 @@ Prerequisites
  * python 3.x
  * gcc 9.2
  * ninja-build - suggested
+ * curl - suggested
 
 Instructions below are for gcc, but project compiles with clang 9 as well.
 
