@@ -143,5 +143,5 @@ cd catapult-server
 mkdir _build && cd _build
 cmake -DBOOST_ROOT=~/boost-build-1.71.0 -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT=/usr/local/ -G Ninja ..
 ninja publish
-ninja -j4
+ninja -j$(nproc)
 ```
