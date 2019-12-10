@@ -141,7 +141,7 @@ git clone https://github.com/nemtech/catapult-server.git
 cd catapult-server
 
 mkdir _build && cd _build
-cmake -DBOOST_ROOT=~/boost-build-1.71.0 -DCMAKE_BUILD_TYPE=Release -G Ninja -DGTEST_LIBRARY=~/googletest.git/_build/googlemock/gtest/ -DGTEST_INCLUDE_DIR=~/googletest.git/googletest/include/ -DGTEST_MAIN_LIBRARY=~/googletest.git/_build/googlemock/gtest/libgtest_main.a ..
+cmake -DBOOST_ROOT=~/boost-build-1.71.0 -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT=/usr/local/ -G Ninja ..
 ninja publish
 ninja -j4
 ```
