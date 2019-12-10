@@ -111,7 +111,7 @@ cd cppzmq.git
 git checkout v4.4.1
 
 mkdir _build && cd _build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DCPPZMQ_BUILD_TESTS=OFF ..
 make
 sudo make install
 ```
@@ -141,7 +141,7 @@ git clone https://github.com/nemtech/catapult-server.git
 cd catapult-server
 
 mkdir _build && cd _build
-cmake -DBOOST_ROOT=~/boost-build-1.71.0 -DCMAKE_BUILD_TYPE=Release -G Ninja ..
+cmake -DBOOST_ROOT=~/boost-build-1.71.0 -DCMAKE_BUILD_TYPE=Release -G Ninja -DGTEST_LIBRARY=~/googletest.git/_build/googlemock/gtest/ -DGTEST_INCLUDE_DIR=~/googletest.git/googletest/include/ -DGTEST_MAIN_LIBRARY=~/googletest.git/_build/googlemock/gtest/libgtest_main.a ..
 ninja publish
 ninja -j4
 ```
