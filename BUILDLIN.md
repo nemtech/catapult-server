@@ -128,7 +128,7 @@ cd rocksdb.git
 git checkout v6.2.4-nem
 
 mkdir _build && cd _build
-cmake -DCMAKE_BUILD_TYPE=Release -DWITH_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DWITH_TESTS=OFF -DCMAKE_CXX_FLAGS:STRING="-Wno-error=deprecated-copy" ..
 make
 sudo make install
 ```
