@@ -121,6 +121,18 @@ Rocks
 
 Currently ubuntu 18.04 has gflags in version 2.2.1 and snappy in version 1.1.7 which are OK
 
+gflags
+```sh
+git clone https://github.com/gflags/gflags.git gflags.git
+cd gflags.git
+git checkout v2.2.2
+
+mkdir _build && cd _build
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON ..
+make
+sudo make install
+```
+
 rocks
 ```sh
 git clone https://github.com/nemtech/rocksdb.git rocksdb.git
@@ -128,7 +140,7 @@ cd rocksdb.git
 git checkout v6.2.4-nem
 
 mkdir _build && cd _build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DWITH_TESTS=OFF -DCMAKE_CXX_FLAGS:STRING="-Wno-error=deprecated-copy" ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DWITH_TESTS=OFF -DCMAKE_CXX_FLAGS:STRING="-Wno-error=deprecated-copy -Wno-error=pessimizing-move" ..
 make
 sudo make install
 ```
