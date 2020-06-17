@@ -2,12 +2,12 @@
 
 The instructions below describe the minimum amount of changes to run a network from the catapult-server build.
 
-NOTE: Replace ``mijin-test`` occurrences for the network type selected.
+NOTE: Replace ``mijin-test`` occurrences with the network type selected.
 The possible network values are: mijin (private), mijin-test (private testnet), public, public-test.
 
 ## Prerequisites
 
-* Follow [catapult-server build](BUILDING.md) instructions.
+* Follow [catapult-server build](BUILDLIN.md) instructions.
 
 ## Copy the configuration template
 
@@ -16,10 +16,10 @@ After building catapult-server, copy the configuration templates from the root f
 ```sh
 cd catapult-server/_build
 cp ../resources/* resources/
-cp ../../tools/nemgen/resources/mijin-test.properties ../resources/
+cp ../tools/nemgen/resources/mijin-test.properties resources/
 ```
 
-NOTE: Copying the resources folder is NOT recommended to deploy a production network.
+WARNING: It is NOT recommended to use the default configuration values in production environments.
 
 ## Generate accounts
 
@@ -29,22 +29,39 @@ Generate a set of accounts. The accounts stored in the file ``nemesis.addresses.
 ./bin/catapult.tools.address -g 10 --network mijin-test > nemesis.addresses.txt
 cat nemesis.addresses.txt
 ```
-NOTE: The script is generating ten accounts for the nemesis block, but the number of accounts is customizable.
+
+The script generates ten accounts for the nemesis block, but the number of accounts is customizable.
+
+## Create the seed and txes directory
+
+1\. Create a directory to save the generated nemesis block under ``catapult-server/_build``.
+
+```ssh
+mkdir -p seed/network-test/00000
+```
+2\. Create a directory to save additional transactions embedded in the nemesis block.
+
+```ssh
+mkdir txes
+```
 
 ## Edit the nemesis block
+
+catapult-server calls the first block in the chain the nemesis block.
+The first block is defined before launching a new network and sets the initial distribution of mosaics.
 
 The file ``resources/mijin-test.properties`` defines the transactions issued in the nemesis block.
 
 1\. Open ``mijin-test.properties`` and edit the ``[nemesis]`` section.
-Replace ``nemesisGenerationHash`` for a unique SHA3-256 hash that will identify the network
-and ``nemesisSignerPrivateKey`` for one of the private keys generated in ``nemesis.addresses.txt``.
+Replace ``nemesisGenerationHashSeed`` with a unique SHA3-256 hash that will identify the network
+and ``nemesisSignerPrivateKey`` with a private key from ``nemesis.addresses.txt``.
 
 ```ini
 [nemesis]
 
 networkIdentifier = mijin-test
-nemesisGenerationHash = 57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6
-nemesisSignerPrivateKey = B59D53B625CC746ECD478FA24F1ABC80B2031EB7DFCD009D5A74ADE615893175
+nemesisGenerationHashSeed = 57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6
+nemesisSignerPrivateKey = 0000000000000000000000000000000000000000000000000000000000000000
 ```
 
 2\. Replace ``[cpp]`` and ``[output]`` sections with the following configuration.
@@ -61,40 +78,81 @@ binDirectory = ../seed/network-test
 ```
 
 3\. Edit the ``[distribution]`` section.
-The account defined under the distribution list will receive mosaics units.
-Replace at least an address for one of the generated addresses in ``nemesis.addresses.txt``.
+The accounts defined under the distribution list will receive mosaics units.
+Replace at least one address of each group with an address from ``nemesis.addresses.txt``.
+The total amount of units distributed must match the original mosaic definition.
+
+WARNING: Do not add the ``nemesisSignerPrivateKey`` account to the distribution list.
+The nemesis signer account cannot announce or participate in transactions.
+The mosaics received by the nemesis account will be lost forever.
+
+Here is an example of how the distribution list looks like after replacing some addresses:
 
 ```ini
 [distribution>cat:currency]
 
-SCHL3EXRBS7HNGZWM5YXPOWQRJPXVXHAEMISSOBP = 409'090'909'000'000
+SAIBNNG7QJXY54Z334HOKA36NTH7FRRCKFRM4XY = 409'090'909'000'000
+...
 
 [distribution>cat:harvest]
 
-SCHL3EXRBS7HNGZWM5YXPOWQRJPXVXHAEMISSOBP = 1'000'000
+SBMEZB54VXTH4PRAUJJQJJFB2SNQZQ2SUI6J7BA = 1'000'000
+...
 ```
-4\. Continue editing the nemesis block to fit the network requirements before moving to the next step.
 
-NOTE: Do not add the ``nemesisSignerPrivateKey`` account to the distribution list.
-The nemesis signer account will not be able to announce transactions.
-The mosaics received by the nemesis account will be lost forever.
+Your addresses should be different, as ``catapult.tools.address`` generates different accounts after every execution. Make sure that someone holds the private keys associated with every address listed before the network is launched.
 
-## Create the seed directory
+4\. Edit the ``[transactions]`` section.
 
-Create a directory to save the generated nemesis block.
+```ini
+[transactions]
+
+transactionsDirectory = ../txes
+```
+
+5\. Continue editing the nemesis block properties to fit your network requirements and save the configuration before moving to the next step.
+
+## Edit the network properties
+
+The file ``resources/config-network.properties`` defines the network configuration.
+Learn more about each network property in [this guide](https://nemtech.github.io/guides/network/configuring-network-properties.html#properties).
+
+Edit the properties file to match the nemesis block with the desired network configuration.
+
+NOTE: By default, ``initialCurrencyAtomicUnits`` and ``totalChainImportance`` do not match the values set in ``./resources/mijin-test.properties``.
+Other values that might differ from the nemesis block file are ``identifier``, ``nemesisSignerPublicKey``, ``generationHashSeed``, ``harvestNetworkFeeSinkAddress``, ``mosaicRentalFeeSinkAddress``, and ``namespaceRentalFeeSinkAddress``.
+
+## Append the VRF Keys to the nemesis block
+
+The process of creating new blocks is called [harvesting](https://nemtech.github.io/concepts/harvesting.html).
+Each node of the network can host zero or more harvester accounts to create new blocks and get rewarded.
+
+In order to be an eligible harvester, the account must:
+
+1. Own a certain amount of harvesting mosaics defined in ``config-network.properties`` between ``minHarvesterBalance`` and ``maxHarvesterBalance``.
+2. Announce a valid VrfKeyLinkTransaction. The VRF transaction links the harvester account with a second key pair to randomize block production and leader selection.
+
+In order to ensure that the network produces a second block after its launch, the nemesis block must include at least one valid VrfKeyLinkTransaction linking a harvester account with a second key pair.
+
+Run the linker tool to create a VrfKeyLinkTransaction. 
 
 ```ssh
-mkdir -p seed/network-test/00000
-dd if=/dev/zero of=seed/network-test/00000/hashes.dat bs=1 count=64
+cd bin
+./catapult.tools.linker --resources ../ --type vrf --secret <HARVESTER_PRIVATE_KEY> --linkedPublicKey <VRF_PUBLIC_KEY> --output ../txes/tx0.bin
 ```
+
+* Replace ``<HARVESTER_PRIVATE_KEY>`` with the private key of an account that has received sufficient harvesting mosaics in ``resources/mijin-test.properties`` ``[distribution>cat:currency]``.
+
+* Replace ``<VRF_PUBLIC_KEY>`` with the public key of an unused account from ``nemesis.addresses.txt``.
+
 ## Generate the network mosaic ids
+
+The network mosaic ids are autogenerated based on the configuration provided in the file ``resources/mijin-test.properties``.
 
 1\. Run the nemesis block generator.
 
 ```ssh
-cd bin
 ./catapult.tools.nemgen --nemesisProperties ../resources/mijin-test.properties
-cd ..
 ```
 
 2\. Copy the currency and harvest mosaic ids displayed on the command line prompt.
@@ -105,26 +163,28 @@ cd ..
 ...
 (nemgen::NemesisConfigurationLoader.cpp@32)  - cat:harvest (4291ED23000A037A)
 ```
+3\. Set ``currencyMosaicId`` and ``harvestingMosaicId`` in ``resources/mijin-test.properties`` with the values generated in the previous step.
 
-## Edit the network properties
+```ini
+[chain]
 
-The file ``resources/config-network.properties`` defines the network configuration.
-Learn more about each network property in [this guide](https://nemtech.github.io/guides/network/configuring-network-properties.html#properties).
-
-Edit the properties file to match the nemesis block and with the desired network configuration.
-
-NOTE: By default, ``initialCurrencyAtomicUnits`` and ``totalChainImportance`` do not match the values set in ``./resources/mijin-test.properties``.
-Other values that might differ from the nemesis block file are ``identifier``,  ``publicKey``, ``generationHash``, ``currencyMosaicId``, ``harvestMosaicId``, ``mosaicRentalFeeSinkAddress``, and ``namespaceRentalFeeSinkAddress``.
+currencyMosaicId = 0x621E'C5B4'0385'6FC2
+harvestingMosaicId = 0x4291'ED23'000A'037A
+```
 
 ## Generate the nemesis block
 
-Run the nemesis block generator.
+1\. Run the nemesis block generator a second time, this time with the correct mosaic ids values.
 
 ```ssh
-cd bin
 ./catapult.tools.nemgen --nemesisProperties ../resources/mijin-test.properties
+```
+
+2\. Copy the generated nemesis block under the ``data`` folder.
+
+```ssh
 cd ..
-cp -r /opt/catapult-server/seed/mijin-test/* data/
+cp -r seed/network-test/* data/
 ```
 
 ## Configure the node
