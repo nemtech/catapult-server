@@ -34,7 +34,7 @@ namespace catapult { namespace model {
 
 	// region size + alignment + properties
 
-#define TRANSACTION_FIELDS FIELD(Secret) FIELD(ProofSize) FIELD(HashAlgorithm) FIELD(RecipientAddress)
+#define TRANSACTION_FIELDS FIELD(RecipientAddress) FIELD(Secret) FIELD(ProofSize) FIELD(HashAlgorithm)
 
 	namespace {
 		template<typename T>

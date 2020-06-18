@@ -31,18 +31,6 @@ namespace catapult { namespace test {
 		else
 			return sizeof(uint64_t); // require non-scalars to be aligned on 64-bit boundaries
 	}
-
-	/// Gets the desired alignment for type Address.
-	template<>
-	constexpr size_t GetRequiredAlignment<Address>() {
-		return sizeof(uint8_t);
-	}
-
-	/// Gets the desired alignment for type UnresolvedAddress.
-	template<>
-	constexpr size_t GetRequiredAlignment<UnresolvedAddress>() {
-		return sizeof(uint8_t);
-	}
 }}
 
 /// Asserts that \a FIELD has proper alignment within \a STRUCT.

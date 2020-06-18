@@ -24,12 +24,16 @@ namespace catapult { namespace builders {
 
 	SecretLockBuilder::SecretLockBuilder(model::NetworkIdentifier networkIdentifier, const Key& signer)
 			: TransactionBuilder(networkIdentifier, signer)
+			, m_recipientAddress()
 			, m_secret()
 			, m_mosaic()
 			, m_duration()
 			, m_hashAlgorithm()
-			, m_recipientAddress()
 	{}
+
+	void SecretLockBuilder::setRecipientAddress(const UnresolvedAddress& recipientAddress) {
+		m_recipientAddress = recipientAddress;
+	}
 
 	void SecretLockBuilder::setSecret(const Hash256& secret) {
 		m_secret = secret;
@@ -45,10 +49,6 @@ namespace catapult { namespace builders {
 
 	void SecretLockBuilder::setHashAlgorithm(model::LockHashAlgorithm hashAlgorithm) {
 		m_hashAlgorithm = hashAlgorithm;
-	}
-
-	void SecretLockBuilder::setRecipientAddress(const UnresolvedAddress& recipientAddress) {
-		m_recipientAddress = recipientAddress;
 	}
 
 	size_t SecretLockBuilder::size() const {
@@ -76,11 +76,11 @@ namespace catapult { namespace builders {
 		auto pTransaction = createTransaction<TransactionType>(sizeImpl<TransactionType>());
 
 		// 2. set fixed transaction fields
+		pTransaction->RecipientAddress = m_recipientAddress;
 		pTransaction->Secret = m_secret;
 		pTransaction->Mosaic = m_mosaic;
 		pTransaction->Duration = m_duration;
 		pTransaction->HashAlgorithm = m_hashAlgorithm;
-		pTransaction->RecipientAddress = m_recipientAddress;
 
 		return pTransaction;
 	}
