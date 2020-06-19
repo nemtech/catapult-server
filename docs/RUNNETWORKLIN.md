@@ -7,7 +7,7 @@ The possible network values are: mijin (private), mijin-test (private testnet), 
 
 ## Prerequisites
 
-* Follow [catapult-server build](BUILDING.md) instructions.
+* Follow [catapult-server build](BUILDLIN.md) instructions.
 
 ## Copy the configuration template
 
