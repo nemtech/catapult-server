@@ -41,6 +41,12 @@ race:~weak_ptr
 race:global_logger::get()
 ```
 
-### Running a private network
+## Running a private network
 
 * [Linux instructions](RUNNETWORKLIN.md)
+* [Network configuration](https://nemtech.github.io/guides/network/configuring-network-properties.html)
+
+## Running a peer node
+
+* [Linux instructions](RUNPEERLIN.md)
+* [Node configuration](https://nemtech.github.io/guides/network/configuring-node-properties.html)
