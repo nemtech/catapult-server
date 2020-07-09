@@ -75,6 +75,6 @@ Copyright (c) 2018 Jaguar0625, gimre, BloodyRookie, Tech Bureau, Corp Licensed u
 [slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
 [catapult-server]: https://github.com/nemtech/catapult-server
 [symbol-rest]: https://github.com/nemtech/catapult-rest
-[Service Bootstrap]: https://github.com/techbureau/catapult-service-bootstrap
+[Service Bootstrap]: https://github.com/tech-bureau/catapult-service-bootstrap
 [nem]: https://nem.io
 [whitepaper]: https://nemtech.github.io/catapult-whitepaper/main.pdf
