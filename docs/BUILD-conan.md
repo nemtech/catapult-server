@@ -6,6 +6,7 @@ NOTE: Commands are using `\` as marker for line continuations
 
 ## Prerequisites
 
+ * gcc 9.2
  * cmake (at least 3.14)
  * python 3.x
  * conan https://conan.io
