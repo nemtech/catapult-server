@@ -30,19 +30,22 @@ namespace catapult { namespace harvesting {
 	/// Harvesting configuration settings.
 	struct HarvestingConfiguration {
 	public:
-		/// Harvester signing private key.
+		/// Harvester signing private key. Used only when harvesting is enabled.
 		std::string HarvesterSigningPrivateKey;
 
-		/// Harvester vrf private key.
+		/// Harvester VRF private key. Used only when harvesting is enabled.
 		std::string HarvesterVrfPrivateKey;
 
-		/// \c true if auto harvesting is enabled.
+		/// Set to \c true and configure both harvester keys to enable harvesting.
 		bool EnableAutoHarvesting;
 
-		/// Maximum number of unlocked accounts.
+		/// Maximum number of unlocked accounts, i.e., the maximum number of
+		/// delegated harvesting accounts.
 		uint32_t MaxUnlockedAccounts;
 
-		/// Delegate harvester prioritization policy.
+		/// Prioritization policy used to keep accounts once the maximum number of
+		/// delegated harvesting accounts is reached. Possible values are \c Age
+		/// and \c Importance.
 		harvesting::DelegatePrioritizationPolicy DelegatePrioritizationPolicy;
 
 		/// Address of the account receiving part of the harvested fee.
