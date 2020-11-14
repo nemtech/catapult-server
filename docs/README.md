@@ -22,9 +22,31 @@ Make sure that the server's host is accessible from the internet and that the po
 
 ## Building catapult-server
 
- * [Build using CONAN recipes](BUILD-conan.md)
- * [Linux instructions](BUILDLIN.md)
- * [Windows instructions](BUILDWIN.md)
+### Prerequisites
+
+ * cmake >= 3.14
+ * python 3.x
+
+### Compilers
+
+Catapult's supported compilers are:
+
+Linux:
+ - Clang: 11.0.1
+ - Clang: 10.0.0
+ - GCC: 10.2.0
+ - GCC: 9.2.1
+
+OS X:
+ - Apple Clang: 11.0.3
+
+Windows:
+ - Visual C++: 15.8
+
+### Guides
+
+ * [Build with CONAN](BUILD-conan.md)
+ * [Build without CONAN](BUILD-manual.md)
 
 ### Sanitizers
 

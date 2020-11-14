@@ -6,10 +6,7 @@ NOTE: Commands are using `\` as marker for line continuations
 
 ## Prerequisites
 
- * gcc 9.2, clang 9 or msvc 15.8 (only one is needed, conan will autodetect)
- * cmake (at least 3.14)
- * python 3.x
- * conan https://conan.io
+ * [conan](https://conan.io)
 
 ### Install and build conan dependencies
 
