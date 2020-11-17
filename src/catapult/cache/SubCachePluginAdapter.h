@@ -278,7 +278,7 @@ namespace catapult { namespace cache {
 			{}
 
 		public:
-			std::unique_ptr<SubCacheView> tryLock() {
+			std::unique_ptr<SubCacheView> tryLock() override {
 				auto delta = m_lockableCacheDelta.tryLock();
 				return delta ? std::make_unique<SubCacheViewAdapter<decltype(delta)>>(std::move(delta), m_id) : nullptr;
 			}

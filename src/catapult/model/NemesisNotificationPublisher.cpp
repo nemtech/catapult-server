@@ -44,7 +44,7 @@ namespace catapult { namespace model {
 			{}
 
 		public:
-			void publish(const WeakEntityInfo& entityInfo, NotificationSubscriber& sub) const {
+			void publish(const WeakEntityInfo& entityInfo, NotificationSubscriber& sub) const override {
 				for (const auto& address : m_options.SpecialAccountAddresses)
 					sub.notify(AccountAddressNotification(address));
 

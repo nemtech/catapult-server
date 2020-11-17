@@ -574,11 +574,11 @@ namespace catapult { namespace local {
 		private:
 			struct CacheSeedingTransactionsBuilder : public test::TransactionsGenerator {
 			public:
-				size_t size() const {
+				size_t size() const override {
 					return std::size(test::Test_Network_Private_Keys);
 				}
 
-				std::unique_ptr<model::Transaction> generateAt(size_t index, Timestamp deadline) const {
+				std::unique_ptr<model::Transaction> generateAt(size_t index, Timestamp deadline) const override {
 					auto keyPair = crypto::KeyPair::FromString(test::Test_Network_Private_Keys[index]);
 					auto recipient = model::PublicKeyToAddress(keyPair.publicKey(), model::NetworkIdentifier::Private_Test);
 					auto unresolvedRecipient = extensions::CopyToUnresolvedAddress(recipient);

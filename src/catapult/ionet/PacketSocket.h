@@ -52,7 +52,7 @@ namespace catapult { namespace ionet {
 		using WaitForDataCallback = action;
 
 	public:
-		virtual ~PacketSocket() = default;
+		~PacketSocket() override = default;
 
 	public:
 		/// Retrieves statistics about this socket and passes them to \a callback.
