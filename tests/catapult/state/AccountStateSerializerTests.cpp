@@ -197,12 +197,16 @@ namespace catapult { namespace state {
 		}
 
 		void ProcessMosaicHeader(AccountState& accountState, const MosaicHeader& header) {
-			const auto* pMosaic = reinterpret_cast<const model::Mosaic*>(&header + 1);
-			for (auto i = 0u; i < header.MosaicsCount; ++i, ++pMosaic) {
-				accountState.Balances.credit(pMosaic->MosaicId, pMosaic->Amount);
+			const auto* pMosaicData = reinterpret_cast<const uint8_t*>(&header + 1);
+
+			for (auto i = 0u; i < header.MosaicsCount; ++i, pMosaicData += sizeof(model::Mosaic)) {
+				model::Mosaic mosaic;
+				std::memcpy(reinterpret_cast<void*>(&mosaic), pMosaicData, sizeof(model::Mosaic));
+
+				accountState.Balances.credit(mosaic.MosaicId, mosaic.Amount);
 
 				if (0 == i)
-					accountState.Balances.optimize(pMosaic->MosaicId);
+					accountState.Balances.optimize(mosaic.MosaicId);
 			}
 		}
 

@@ -20,9 +20,10 @@
 
 #pragma once
 #include "catapult/exceptions.h"
+#include "catapult/preprocessor.h"
 
-struct evp_cipher_ctx_st;
-struct evp_md_ctx_st;
+struct MAY_ALIAS evp_cipher_ctx_st;
+struct MAY_ALIAS evp_md_ctx_st;
 
 namespace catapult { namespace crypto {
 
@@ -30,6 +31,9 @@ namespace catapult { namespace crypto {
 
 	/// Wrapper for openssl digest context.
 	class alignas(32) OpensslDigestContext {
+	private:
+		using context_type = evp_md_ctx_st;
+
 	public:
 		/// Creates a new context.
 		OpensslDigestContext();
@@ -48,7 +52,7 @@ namespace catapult { namespace crypto {
 		}
 
 	private:
-		evp_md_ctx_st* get();
+		context_type* get();
 		void reset();
 
 	private:
@@ -61,6 +65,9 @@ namespace catapult { namespace crypto {
 
 	/// Wrapper for openssl cipher context.
 	class alignas(32) OpensslCipherContext {
+	private:
+		using context_type = evp_cipher_ctx_st;
+
 	public:
 		/// Creates a new context.
 		OpensslCipherContext();
@@ -85,7 +92,7 @@ namespace catapult { namespace crypto {
 		}
 
 	private:
-		evp_cipher_ctx_st* get();
+		context_type* get();
 		void reset();
 
 	private:

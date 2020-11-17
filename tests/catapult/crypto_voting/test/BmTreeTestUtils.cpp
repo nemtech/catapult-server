@@ -34,7 +34,8 @@ namespace catapult { namespace test {
 			const std::unordered_set<size_t>& expectedZeroedIndexes,
 			const std::string& message) {
 		for (auto i = 0u; i < keysCount; ++i) {
-			const auto& key = reinterpret_cast<const Key&>(buffer[offset + i * BmTreeSizes::Level_Entry_Size]);
+			Key key;
+			std::memcpy(key.data(), &buffer[offset + i * BmTreeSizes::Level_Entry_Size], Key::Size);
 
 			if (expectedZeroedIndexes.cend() == expectedZeroedIndexes.find(i))
 				EXPECT_NE(Key(), key) << message << " key should not be zeroed at " << i;

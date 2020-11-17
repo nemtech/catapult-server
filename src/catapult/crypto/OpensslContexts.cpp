@@ -43,8 +43,8 @@ namespace catapult { namespace crypto {
 		reset();
 	}
 
-	EVP_MD_CTX* OpensslDigestContext::get() {
-		return reinterpret_cast<EVP_MD_CTX*>(m_buffer);
+	OpensslDigestContext::context_type* OpensslDigestContext::get() {
+		return reinterpret_cast<context_type*>(m_buffer);
 	}
 
 	void OpensslDigestContext::reset() {
@@ -63,8 +63,8 @@ namespace catapult { namespace crypto {
 		reset();
 	}
 
-	EVP_CIPHER_CTX* OpensslCipherContext::get() {
-		return reinterpret_cast<EVP_CIPHER_CTX*>(m_buffer);
+	OpensslCipherContext::context_type* OpensslCipherContext::get() {
+		return reinterpret_cast<context_type*>(m_buffer);
 	}
 
 	void OpensslCipherContext::reset() {

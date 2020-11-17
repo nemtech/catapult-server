@@ -66,11 +66,13 @@ namespace catapult { namespace model {
 		crypto::Sha3_256(publicKey, publicKeyHash);
 
 		// step 2: ripemd160 hash of (1)
-		Address decoded;
-		crypto::Ripemd160(publicKeyHash, reinterpret_cast<Hash160&>(decoded[1]));
+		Hash160 step2Hash;
+		crypto::Ripemd160(publicKeyHash, step2Hash);
 
 		// step 3: add network identifier byte in front of (2)
+		Address decoded;
 		decoded[0] = utils::to_underlying_type(networkIdentifier);
+		std::memcpy(&decoded[1], &step2Hash[0], Hash160::Size);
 
 		// step 4: concatenate (3) and the checksum of (3)
 		Hash256 step3Hash;

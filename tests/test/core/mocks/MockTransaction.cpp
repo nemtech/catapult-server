@@ -72,10 +72,10 @@ namespace catapult { namespace mocks {
 		pTransaction->MaxFee = fee;
 		pTransaction->Version = 0;
 
-		auto pTransfer = reinterpret_cast<UnresolvedMosaic*>(pTransaction->DataPtr());
+		auto* pTransferData = pTransaction->DataPtr();
 		for (const auto& transfer : transfers) {
-			*pTransfer = transfer;
-			++pTransfer;
+			std::memcpy(pTransferData, &transfer, sizeof(UnresolvedMosaic));
+			pTransferData += sizeof(UnresolvedMosaic);
 		}
 
 		return pTransaction;

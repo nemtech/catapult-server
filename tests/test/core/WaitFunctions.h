@@ -20,6 +20,7 @@
 
 #pragma once
 #include "catapult/functions.h"
+#include <stdint.h>
 
 namespace boost { namespace asio { class io_context; } }
 
