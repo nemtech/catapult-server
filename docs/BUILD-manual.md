@@ -16,6 +16,9 @@ Required
 Recommended
 
  - ninja-build
+ - zsh
+ - pkg-config
+ - build-essential
 
 ## Step 1 - Download all dependencies from source
 
@@ -89,7 +92,7 @@ function install_google_test {
 
 function install_google_benchmark {
 	cmake_options=()
-	cmake_options+=(-DBENCHMARK_ENABLE_GTEST_TESTS=OFF)
+	cmake_options+=(-DBENCHMARK_ENABLE_GTEST_TESTS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
 	install_git_dependency google benchmark
 }
 
@@ -165,7 +168,10 @@ cd catapult-server
 mkdir _build && cd _build
 cmake BOOST_ROOT="${CAT_DEPS_DIR}/boost" cmake .. \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	-DCMAKE_PREFIX_PATH="${CAT_DEPS_DIR}/facebook:${CAT_DEPS_DIR}/google:${CAT_DEPS_DIR}/mongodb:${CAT_DEPS_DIR}/zeromq" \
-	\
+	-DCMAKE_PREFIX_PATH="${CAT_DEPS_DIR}/facebook;${CAT_DEPS_DIR}/google;${CAT_DEPS_DIR}/mongodb;${CAT_DEPS_DIR}/zeromq" \
+	-DBoost_INCLUDE_DIR=${CAT_DEPS_DIR}/boost/include \
 	-GNinja
+
+ninja publish
+ninja -j4
 ```
