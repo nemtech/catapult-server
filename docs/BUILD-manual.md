@@ -197,4 +197,25 @@ ninja publish
 ninja -j4
 ```
 
-:warning: On macOS, use ':' as separator character instead of ';'.
+> **NOTE:**
+> On macOS, use ':' as separator character instead of ';' for ``CMAKE_PREFIX_PATH``.
+
+## Step 4: Installation
+
+Once the build finishes successfully, the tools in ``_build/bin`` are ready to use. Optionally, they can be made available globally by running:
+
+```sh
+sudo ninja install
+```
+
+Regardless of whether the tools are installed globally or not, their dependencies must be accessible before running them so make sure to update ``LD_LIBRARY_PATH``:
+
+```sh
+export LD_LIBRARY_PATH=$CAT_DEPS_DIR/boost/lib:$CAT_DEPS_DIR/facebook/lib:$CAT_DEPS_DIR/google/lib:$CAT_DEPS_DIR/mongodb/lib:$CAT_DEPS_DIR/zeromq/lib
+```
+
+Verify that the tools are working correctly by running:
+
+```sh
+bin/catapult.tools.address --help
+```
