@@ -4,22 +4,28 @@ This guide should mostly work for Linux and OS X operating systems.
 It does not include instructions for Windows.
 For Windows, [Build with CONAN](BUILD-conan.md) is strongly encouraged.
 
-Assume an environment variable named `CAT_DEPS_DIR` is defined as the directory that should contain all catapult dependencies.
-
 ## Prerequisites
 
-Required
+Required:
 
- - OpenSSL dev library (libssl-dev) >= 1.1.1g
- - pkg-config [for zeromq]
- - zsh [for Step 2]
+- OpenSSL dev library (`libssl-dev`) >= 1.1.1g
+- `pkg-config` (for zeromq).
+- `zsh` (for Step 2). This shell is known to work, other shells have not been tested.
+- An environment variable named `CAT_DEPS_DIR` defined as the directory containing all catapult dependencies.
+- About 15 GB of free disk space.
 
-## Step 0 - (Optional) Ubuntu setup
+These instructions have been verified to work on Ubuntu 20.04 with 8 GB of RAM and 4 CPU cores.
 
-``` sh
+### Installing the prerequisites on Ubuntu
+
+This code snippet installs the aforementioned prerequisites on apt-based systems (like Ubuntu), creates a `cat_deps_dir` folder under `$HOME` and points `CAT_DEPS_DIR` to it.
+
+Copy & paste it into a terminal (please mind the blank lines):
+
+```sh
 sudo apt update
 sudo apt -y upgrade
-sudo apt -y install gcc g++ cmake libssl-dev ninja-build zsh pkg-config
+sudo apt -y install git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config
 
 zsh
 
@@ -27,7 +33,12 @@ mkdir -p cat_deps_dir
 export CAT_DEPS_DIR=$HOME/cat_deps_dir
 ```
 
-## Step 1 - Download all dependencies from source
+> **NOTE**:
+> If you want the `CAT_DEPS_DIR` environment variable to persist across sessions make sure to include the last line in the `~/.profile` or `~/.bashrc` files.
+
+## Step 1: Download all dependencies from source
+
+Copy & paste the whole snippet below into a terminal:
 
 ```sh
 function download_boost {
@@ -67,7 +78,9 @@ cd source
 download_all
 ```
 
-## Step 2 - Install all dependencies
+## Step 2: Build and install all dependencies
+
+Copy & paste the whole snippet below into a terminal:
 
 ```sh
 boost_output_dir=${CAT_DEPS_DIR}/boost
@@ -166,7 +179,9 @@ cd ${CAT_DEPS_DIR}
 install_all
 ```
 
-## Step 3 - Finally, download and build catapult
+## Step 3: Download and build catapult
+
+Finally, copy & paste the whole snippet below into a terminal:
 
 ```sh
 git clone https://github.com/nemtech/catapult-server.git
@@ -182,4 +197,4 @@ ninja publish
 ninja -j4
 ```
 
-:warning: On MacOS, use ':' as separator character instead of ';'.
+:warning: On macOS, use ':' as separator character instead of ';'.
