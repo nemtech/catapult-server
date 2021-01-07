@@ -3,11 +3,11 @@
 The instructions below describe the minimum amount of changes to run a network from the catapult-server build.
 
 NOTE: Replace ``private-test`` occurrences with the network type selected.
-The possible network values are: private, private-test, public, public-test.
+The possible network values are: ``private``, ``private-test``, ``public``, ``public-test``.
 
 ## Prerequisites
 
-* Follow [catapult-server build](BUILDLIN.md) instructions.
+* Have built catapult-server following either [CONAN](BUILD-conan.md) or [manual](BUILD-manual.md) instructions.
 
 ## Copy the configuration template
 

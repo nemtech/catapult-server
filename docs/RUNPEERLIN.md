@@ -5,7 +5,7 @@ These instructions summarize the minimum number of steps to run a [peer node](ht
 ## Prerequisites
 
 * Have defined the network nemesis block. Follow [these instructions](RUNNETWORKLIN.md) to run a private network.
-* Have catapult-server compiled in the node. Follow [these instructions](BUILDLIN.md) to build catapult-server.
+* Have built catapult-server following either [CONAN](BUILD-conan.md) or [manual](BUILD-manual.md) instructions.
 
 ## Replace the network configuration
 
