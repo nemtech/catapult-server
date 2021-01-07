@@ -1,16 +1,14 @@
-# Building with conan
+# Building with Conan
 
-Following instructions should work both on mac, linux, windows
-
-NOTE: Commands are using `\` as marker for line continuations
+Following instructions should work both on Mac, Linux and Windows.
 
 ## Prerequisites
 
- * [conan](https://conan.io)
+* [Conan](https://conan.io)
 
-### Install and build conan dependencies
+### Install and build Conan dependencies
 
-While conan will be building and installing packages, you might want to go for a ☕ (or lunch),
+While Conan will be building and installing packages, you might want to go for a ☕ (or lunch),
 as this will probably take *a bit*.
 
 ```sh
@@ -23,27 +21,31 @@ mkdir _build && cd _build
 conan install .. --build missing
 ```
 
-OS dependent instructions:
+## Build instructions
 
-**Windows + MSVC**
+### Windows + Visual Studio
 
-generate project files for VS 2019
+Generate project files for VS 2019:
+
 ```sh
 cmake -G "Visual Studio 16 2019" -A x64 -DUSE_CONAN=ON -DPYTHON_EXECUTABLE:FILEPATH=X:/python3x/python.exe ..
 ```
 
-generate project files for VS 2017
+Generate project files for VS 2017:
+
 ```sh
 cmake -G "Visual Studio 15 2017 Win64" -DUSE_CONAN=ON -DPYTHON_EXECUTABLE:FILEPATH=X:/python3x/python.exe ..
 ```
 
-compilation
+Compilation:
+
 ```sh
 cmake --build . --target publish
 msbuild /p:Configuration=RelWithDebInfo /p:Platform=x64 ALL_BUILD.vcxproj
 ```
 
-**Linux + MacOS**
+### Linux and macOS
+
 ```sh
 cmake -DUSE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -G Ninja ..
 ninja publish
