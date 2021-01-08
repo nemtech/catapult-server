@@ -8,7 +8,7 @@ For Windows, [Build with CONAN](BUILD-conan.md) is strongly encouraged.
 
 Required:
 
-- OpenSSL dev library (`libssl-dev`) >= 1.1.1g
+- OpenSSL dev library (`libssl-dev`) >= 1.1.1g.
 - `pkg-config` (for zeromq).
 - `zsh` (for Step 2). This shell is known to work, other shells have not been tested.
 - An environment variable named `CAT_DEPS_DIR` defined as the directory containing all catapult dependencies.
@@ -205,7 +205,7 @@ ninja -j4
 Once the build finishes successfully, the tools in ``_build/bin`` are ready to use. Optionally, they can be made available globally by running:
 
 ```sh
-sudo ninja install
+ninja install
 ```
 
 Regardless of whether the tools are installed globally or not, their dependencies must be accessible before running them so make sure to update ``LD_LIBRARY_PATH``:

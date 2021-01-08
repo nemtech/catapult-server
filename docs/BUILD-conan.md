@@ -1,6 +1,6 @@
 # Building with Conan
 
-Following instructions should work both on Mac, Linux and Windows.
+Following instructions should work on Mac, Linux and Windows.
 
 ## Prerequisites
 
