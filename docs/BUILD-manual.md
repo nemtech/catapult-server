@@ -205,8 +205,11 @@ ninja -j4
 Once the build finishes successfully, the tools in ``_build/bin`` are ready to use. Optionally, they can be made available globally by running:
 
 ```sh
-ninja install
+sudo ninja install
 ```
+
+> **NOTE:**
+> You can change the default installation location passing ``-DCMAKE_INSTALL_PREFIX=...`` to ``cmake``. In this case you might not require ``sudo``.
 
 Regardless of whether the tools are installed globally or not, their dependencies must be accessible before running them so make sure to update ``LD_LIBRARY_PATH``:
 
