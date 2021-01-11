@@ -34,6 +34,9 @@ conan install .. --build missing
 
 ### Windows + Visual Studio
 
+> **NOTE:**
+> Make sure to use the correct ``PYTHON_EXECUTABLE`` path! Python is required in the latest steps of the build to produce some header files. If Python cannot be found you won't notice until more than one hour into the build process because of some missing headers.
+
 * Generate project files for VS 2019:
 
   ```sh
