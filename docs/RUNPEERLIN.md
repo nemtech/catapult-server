@@ -172,4 +172,4 @@ Among other things, you should see a line reporting the current chain height:
 ... peernode @ 127.0.0.1:7900 [P2P] at height 118 (78 finalized) with score ...
 ```
 
-The health tool connects to all nodes listed in the ``resources/peers-p2p.json`` so make sure you have added your own node in the list.
+The health tool connects to all nodes listed in the ``resources/peers-p2p.json`` so make sure you have added your own node to the list.
