@@ -6,7 +6,7 @@ Following instructions should work on Mac, Linux and Windows.
 
 * Install [Conan](https://conan.io)
 
-* **On Linux and Mac**, if this is the first time running Conan, you need to set the right C++ ABI:
+* **On Linux**, if this is the first time running Conan, you need to set the right C++ ABI:
 
   ```sh
   conan profile new default --detect
