@@ -3,11 +3,11 @@
 The instructions below describe the minimum amount of changes to run a network from the catapult-server build.
 
 NOTE: Replace ``private-test`` occurrences with the network type selected.
-The possible network values are: ``private``, ``private-test``, ``public``, ``public-test``.
+The possible network values are: ``private``, ``private-test``, ``public`` and ``public-test``.
 
 ## Prerequisites
 
-* Have built catapult-server following either [CONAN](BUILD-conan.md) or [manual](BUILD-manual.md) instructions.
+* Have built catapult-server following either [Conan](BUILD-conan.md) or [manual](BUILD-manual.md) instructions.
 
 ## Copy the configuration template
 
@@ -19,7 +19,8 @@ cp ../resources/* resources/
 cp ../tools/nemgen/resources/private-test.properties resources/
 ```
 
-WARNING: Using the default configuration values in production environments is NOT recommended.
+> **WARNING:**
+> Using the default configuration values in production environments is NOT recommended.
 
 ## Generate accounts
 
@@ -62,7 +63,7 @@ and ``nemesisSignerPrivateKey`` with a private key from ``nemesis.addresses.txt`
 
     networkIdentifier = private-test
     nemesisGenerationHashSeed = 57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6
-    nemesisSignerPrivateKey = 0000000000000000000000000000000000000000000000000000000000000000
+    nemesisSignerPrivateKey = ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●
     ```
 
 2. Replace ``[cpp]`` and ``[output]`` sections with the following configuration.
@@ -78,14 +79,16 @@ and ``nemesisSignerPrivateKey`` with a private key from ``nemesis.addresses.txt`
     binDirectory = ../seed/network-test
     ```
 
-3. Edit the ``[distribution]`` section.
-The accounts defined under the distribution list will receive mosaics units.
-Replace at least one address of each group with an address from ``nemesis.addresses.txt``.
-The total amount of units distributed must match the original mosaic definition.
+3. Edit the ``[distribution]`` sections.
+The accounts defined under each distribution list (``distribution>cat:currency`` and ``distribution>cat:harvest``) will receive mosaics units.
+Replace at least one address in each list with an address from ``nemesis.addresses.txt``.
 
-    WARNING: Do not add the ``nemesisSignerPrivateKey`` account to the distribution list.
-The nemesis signer account cannot announce or participate in transactions.
-The mosaics received by the nemesis account will be lost forever.
+   The total amount of units distributed must match the ``supply`` defined in the ``[mosaic]`` sections (``mosaic>cat:currency`` and ``mosaic>cat:harvest``).
+
+    > **WARNING:**
+    > Do not add the ``nemesisSignerPrivateKey`` account to the distribution list.
+      The nemesis signer account cannot announce or participate in transactions.
+      The mosaics received by the nemesis account will be lost forever.
 
     Here is an example of how the distribution list looks like after replacing some addresses:
 
@@ -118,10 +121,16 @@ The mosaics received by the nemesis account will be lost forever.
 The file ``resources/config-network.properties`` defines the network configuration.
 Learn more about each network property in [this guide](https://nemtech.github.io/guides/network/configuring-network-properties.html#properties).
 
-Edit the properties file to match the nemesis block with the desired network configuration.
+Edit the properties file to match the nemesis block with the desired network configuration. Important properties to check are:
 
-NOTE: By default, ``initialCurrencyAtomicUnits`` and ``totalChainImportance`` do not match the values set in ``./resources/private-test.properties``.
-Other values that might differ from the nemesis block file are ``identifier``, ``nemesisSignerPublicKey``, ``generationHashSeed``, ``harvestNetworkFeeSinkAddress``, ``mosaicRentalFeeSinkAddress``, and ``namespaceRentalFeeSinkAddress``.
+* ``initialCurrencyAtomicUnits``: Initial currency units available in the network, as specified in the ``supply`` property in the ``[mosaic>cat:currency]`` in ``private-test.properties``.
+* ``totalChainImportance``: Total importance units available in the network. **This must match the sum of all mosaics distributed in the ``distribution>cat:harvest`` section in ``private-test.properties``**.
+* ``identifier``: Network identifier, must be one of ``private``, ``private-test``, ``public`` or ``public-test``.
+* ``nemesisSignerPublicKey``: The public key corresponding to the ``nemesisSignerPrivateKey`` used in ``private-test.properties``.
+* ``generationHashSeed``: The same value used as ``nemesisGenerationHashSeed`` in ``private-test.properties``.
+* ``harvestNetworkFeeSinkAddress``: Address of the harvest network fee sink account.
+* ``mosaicRentalFeeSinkAddress``: Address of the mosaic rental fee sink account.
+* ``namespaceRentalFeeSinkAddress``: Address of the namespace rental fee sink account.
 
 ## Append the VRF Keys to the nemesis block
 
@@ -162,8 +171,9 @@ Each node of the network can optionally host a voting account (to partake in the
     First run the voting key tool to generate the key. It will be printed on the standard output:
 
     ```sh
+    mkdir votingkeys
     cd bin
-    ./catapult.tools.votingkey --output ../private_key_tree1.dat
+    ./catapult.tools.votingkey --output ../votingkeys/private_key_tree1.dat
     ```
 
     Then run the linker tool to create a VotingKeyLinkTransaction:
@@ -186,7 +196,9 @@ The network mosaic ids are autogenerated based on the configuration provided in 
     ./catapult.tools.nemgen --nemesisProperties ../resources/private-test.properties
     ```
 
-2. Copy the currency and harvest mosaic ids displayed on the command line prompt.
+    **It will error out** because the mosaic ids currently in ``config-network.properties`` do not match the calculated values. Do not worry, we are going to fix that now.
+
+2. Copy the currency and harvest mosaic ids displayed on the command line prompt (the hex string in parentheses):
 
     ```sh
     (nemgen::NemesisConfigurationLoader.cpp@57) Mosaic Summary
@@ -195,13 +207,13 @@ The network mosaic ids are autogenerated based on the configuration provided in 
     (nemgen::NemesisConfigurationLoader.cpp@32)  - cat:harvest (4291ED23000A037A)
     ```
 
-3. Set ``currencyMosaicId`` and ``harvestingMosaicId`` in ``resources/private-test.properties`` with the values generated in the previous step.
+3. Set ``currencyMosaicId`` and ``harvestingMosaicId`` in ``resources/config-network.properties`` with the values obtained in the previous step (You will find these properties in the ``chain`` section).
 
     ```ini
     [chain]
 
-    currencyMosaicId = 0x621E'C5B4'0385'6FC2
-    harvestingMosaicId = 0x4291'ED23'000A'037A
+    currencyMosaicId = 0x621EC5B403856FC2
+    harvestingMosaicId = 0x4291ED23000A037A
     ```
 
 ## Generate the nemesis block

@@ -4,28 +4,29 @@ These instructions summarize the minimum number of steps to run a [peer node](ht
 
 ## Prerequisites
 
+* Have built catapult-server following either [Conan](BUILD-conan.md) or [manual](BUILD-manual.md) instructions.
 * Have defined the network nemesis block. Follow [these instructions](RUNNETWORKLIN.md) to run a private network.
-* Have built catapult-server following either [CONAN](BUILD-conan.md) or [manual](BUILD-manual.md) instructions.
 
 ## Replace the network configuration
 
-NOTE: This step is only required when connecting a peer node to a network that is up and running.
+> **NOTE:**
+> This step is only required when connecting a peer node to a network that is up and running.
 If you have not launched a network yet, move directly to ["Edit the node properties"](#edit-the-node-properties).
 
-1\. Download a copy of the following files and folders from the node that originated the network:
+1. Download a copy of the following files and folders from the node that originated the network:
 
-* ``catapult-server/_build/resources/``
-* ``catapult-server/_build/seed/``
+   * ``catapult-server/_build/resources/``
+   * ``catapult-server/_build/seed/``
 
-2\. Save the downloaded files from the candidate peer node server in a new folder named ``network-config`` under the ``catapult-server/_build`` directory.
+2. Save the downloaded files from the candidate peer node server in a new folder named ``network-config`` under the ``catapult-server/_build`` directory.
 
-3\. To add the network configuration to the peer node, run the following commands from the ``catapult-server/_build`` directory.
+3. To add the network configuration to the peer node, run the following commands from the ``catapult-server/_build`` directory.
 
-```sh
-mkdir data
-cp -r network-config/seed/network-test/ data/
-cp -r network-config/resources/ resources/
-```
+   ```sh
+   mkdir data
+   cp -r network-config/seed/network-test/ data/
+   cp -r network-config/resources/ resources/
+   ```
 
 ## Edit the node properties
 
@@ -47,7 +48,8 @@ roles = Peer
 
 This step enables [harvesting](https://nemtech.github.io/concepts/harvesting.html), which allows the node to produce new blocks.
 
-NOTE: At least one node of the network must have harvesting enabled to produce new blocks. If you don't want to enable harvesting, move directly to [Add other peer nodes](#add-other-peer-nodes).
+> **NOTE:**
+> At least one node of the network must have harvesting enabled to produce new blocks. If you don't want to enable harvesting, move directly to [Add other peer nodes](#add-other-peer-nodes).
 
 1. Open the file ``resources/config-extensions-server.properties`` and enable the harvesting extension.
 
@@ -64,7 +66,7 @@ NOTE: At least one node of the network must have harvesting enabled to produce n
     [harvesting]
     harvesterSigningPrivateKey = <HARVESTER_SIGNING_PRIVATE_KEY>
     harvesterVrfPrivateKey = <HARVESTER_VRF_PRIVATE_KEY>
-    isAutoHarvestingEnabled = true
+    enableAutoHarvesting = true
     ...
     ```
 
@@ -97,12 +99,15 @@ Catapult uses TLS 1.3 to provide secure connections and identity assurance among
     ...
     ```
 
-## Add other peer nodes
+## List known peer nodes
 
 The file ``resources/peers-p2p.json`` should list strong nodes to serve as beacons.
 A random subset of beacons should be set in each node's peer file for best network performance.
 
-1. Open the file and replace the public key and host with the public key, host, and port of the node that originated the network.
+> **NOTE:**
+> If you just created the network and your node is the only one, make sure to add it to this file.
+
+1. Open ``resources/peers-p2p.json`` and replace the public key and host with the public key, host, and port of the node that originated the network.
 
     ```json
     {
@@ -141,12 +146,30 @@ cd bin
 If this is the first node of the network, you should see in the terminal the peer node producing new blocks:
 
 ```sh
-2020-04-17 12:55:25.687924 0x00007f39d7a39700: <info> (src::ScheduledHarvesterTask.cpp@35) successfully harvested block
- at 1804 with signer 4F92FF92C3F8F71A17615223E978A77E7DADEF401EEB046F1F31DF7AC8345DDE
+... successfully harvested block at 1804 with signer ...
 ```
 
 If you are connecting to an existing network, you should see the peer node synchronizing blocks:
 
 ```sh
-2020-04-17 08:19:18.798634 0x00007f71c5976700: <info> (chain::ChainSynchronizer.cpp@206) peer returned 42 blocks (heights 2 - 43)
+... peer returned 42 blocks (heights 2 - 43)
 ```
+
+The node can be stopped by pressing ``Ctrl-C`` and restarted simply by running ``catapult.server`` again.
+
+## Check that the node is accessible and running
+
+Finally, while the node is running and producing log output, open another terminal and move into the `_build/bin` folder. Then run `catapult.tools.health` to connect to the running node and retrieve some statistics:
+
+```sh
+cd _build/bin
+./catapult.tools.health
+```
+
+Among other things, you should see a line reporting the current chain height:
+
+```sh
+... peernode @ 127.0.0.1:7900 [P2P] at height 118 (78 finalized) with score ...
+```
+
+The health tool connects to all nodes listed in the ``resources/peers-p2p.json`` so make sure you have added your own node in the list.
