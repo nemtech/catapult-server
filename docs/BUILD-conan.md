@@ -6,14 +6,14 @@ Following instructions should work on Mac, Linux and Windows.
 
 * Install [Conan](https://conan.io)
 
-* **On Linux and Mac**, if this is first time running Conan, you need to set the right C++ ABI:
+* **On Linux and Mac**, if this is the first time running Conan, you need to set the right C++ ABI:
 
   ```sh
   conan profile new default --detect
   conan profile update settings.compiler.libcxx=libstdc++11 default
   ```
 
-* **On Windows**, run all the commands below from a command prompt which has access to Visual Studio and Git. This can be accomplished by using the "Native Tools Command Prompt" shortcut that Visual Studio installs on the Start Menu.
+* **On Windows**, run all the commands below from a command prompt that has access to Visual Studio and Git. This can be accomplished by using the "Native Tools Command Prompt" shortcut installed by Visual Studio on the Start Menu.
 
 ## Step 1: Build dependencies
 
@@ -87,7 +87,7 @@ conan install .. --build missing
   ```
 
   > **NOTE:**
-  > You can change the default installation location passing ``-DCMAKE_INSTALL_PREFIX=...`` to ``cmake`` in the Build step. In this case you might not require ``sudo``.
+  > You can change the default installation location by passing ``-DCMAKE_INSTALL_PREFIX=...`` to ``cmake`` in the Build step. In this case you might not require ``sudo``.
 
 * Verify:
 
