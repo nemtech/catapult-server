@@ -34,14 +34,26 @@ The file ``resources/config-node.properties`` defines the node configuration.
 Learn more about each network property in [this guide](https://nemtech.github.io/guides/network/configuring-node-properties.html#properties).
 
 Open ``resources/config-node.properties`` and search for the ``[localnode]`` section.
-Then, edit the properties with the peer node details.
+Then, edit the properties with the node details. You will need at least these properties:
+
+* ``host``: IP address of your node.
+* ``friendlyName``: Name of your node for display purposes.
+* ``version``: Version of catapult-server used by your node. Leave empty to use the current one.
+* ``roles``: A comma-separated list of the following values:
+  * ``Peer``: Node verifies transactions and blocks, runs the consensus algorithm, creates new blocks ([Documentation](https://docs.symbolplatform.com/concepts/node#peer-node)).
+  * ``Api``: Node provides REST access to the blockchain ([Documentation](https://docs.symbolplatform.com/concepts/node#api-node)).
+  * ``Voting``: Node participates in the Finalization process ([Documentation](https://docs.symbolplatform.com/concepts/block#finalization)).
+  * ``IPv4``: Node is compatible with IP version 4.
+  * ``IPv6``: Node is compatible with IP version 6.
+
+For example:
 
 ``` ini
 [localnode]
 host = <YOUR_NODE_IP>
 friendlyName = myPeerNode
-version = 0
-roles = Peer
+version = 0.10.0.4
+roles = IPv4,Peer
 ```
 
 ## Enable harvesting
