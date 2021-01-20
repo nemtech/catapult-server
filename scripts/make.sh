@@ -18,6 +18,7 @@ function help {
 
 function set_depsdir {
 	depsdir=$CAT_DEPS_DIR
+	boost_output_dir=$depsdir/boost
 	if [ "_$CAT_DEPS_DIR" == "_" ]; then
 		CAT_DEPS_DIR="$HOME/cat_deps_dir"
 		depsdir=$CAT_DEPS_DIR
@@ -179,7 +180,6 @@ function install_system_reqs {
 }
 
 function download_deps {
-	set_depsdir
 	if [ -d $depsdir ]; then
 		echo "Warning: $depsdir already exists. Overwriting content."
 	fi
@@ -195,8 +195,7 @@ function download_deps {
 }
 
 function install_deps {
-	set_depsdir
-	if [ ! -d $boost_output_dir ]; then
+	if [ ! -d ${boost_output_dir} ]; then
 		download_deps
 	fi
 	pushd $depsdir > /dev/null
@@ -213,14 +212,19 @@ function install_main {
 		install_system_reqs $@
 		exitok
 	elif [ "_$cmd" == "_deps" ]; then
+		set_depsdir
 		install_deps $@
 		exitok
 	fi
 }
 
+depsdir=""
+boost_output_dir=""
+
 function download {
 	cmd=$1
 	shift
+	set_depsdir
 	if [ "_$cmd" == "_deps" ]; then
 		download_deps $@
 		exitok
@@ -228,8 +232,8 @@ function download {
 }
 
 function build_catapult {
-	echo "building using ${jobs} jobs"
 	set_depsdir
+	echo "building using ${jobs} jobs"
 	echo "dependencies dir: ${depsdir}"
         if [ ! -d ${boost_output_dir} ]; then
                 install_deps
@@ -259,9 +263,7 @@ function build_catapult {
 prog=$0
 jobs=8
 warn_env=0
-depsdir=$CAT_DEPS_DIR
 debs="git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config"
-boost_output_dir=$depsdir/boost
 
 cmd=$1
 shift
