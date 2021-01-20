@@ -8,6 +8,12 @@ function help {
 	echo "    $prog download deps                Obtain 3rd party libs."
 	echo "    $prog install deps                 Compile & install 3rd party libs."
 	echo "    $prog                              Compile catapult-server."
+	if [ "_$CAT_DEPS_DIR" == "_" ]; then
+		echo "Environment variable CAT_DEPS_DIR not set. Required for storing source dependencies."
+		echo "Default value is: $HOME/cat_deps_dir"
+	else
+		echo "Dependencies env.var CAT_DEPS_DIR is set to $CAT_DEPS_DIR"
+	fi
 }
 
 function set_depsdir {

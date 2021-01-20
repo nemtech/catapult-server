@@ -40,6 +40,9 @@ Type this into a terminal:
 scripts/make.sh install deps
 ```
 
+> **NOTE**:
+> If you only want to download the dependencies (without building and installing them) enter the command `download deps` instead. Type `scripts/make.sh --help` for its summary of commands.
+
 ## Step 2: build catapult (installs deps if required)
 
 Finally, for building or re-building the software type into a terminal:
