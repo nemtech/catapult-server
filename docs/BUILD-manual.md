@@ -36,20 +36,23 @@ export CAT_DEPS_DIR=$HOME/cat_deps_dir
 ## Optional step: Download, build and install all dependencies from source
 
 Type this into a terminal:
+
 ```sh
 scripts/make.sh install deps
 ```
 
 > **NOTE**:
-> If you only want to download the dependencies (without building and installing them) enter the command `download deps` instead. Type `scripts/make.sh --help` for its summary of commands.
+> If you only want to download the dependencies (without building and installing them) enter the command ``scripts/make.sh download deps`` instead. Type ``scripts/make.sh --help`` for its summary of commands.
 
-## Step 2: build catapult (installs deps if required)
+## Step 2: Build catapult
 
 Finally, for building or re-building the software type into a terminal:
 
 ```sh
 scripts/make.sh
 ```
+
+It will handle if you missed the previous optional step.
 
 ## Step 3: Installation
 
