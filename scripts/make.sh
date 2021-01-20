@@ -1,15 +1,22 @@
 #!/bin/bash
+# This program automates common/essential tasks for building catapult-server
 
+function help {
+	echo "Available commands:"
+	echo "    $prog install system_reqs          Installs apt dependencies. Requires sudo."
+	echo "          debian packages: $debs"
+	echo "    $prog download deps                Obtain 3rd party libs."
+	echo "    $prog install deps                 Compile & install 3rd party libs."
+	echo "    $prog                              Compile catapult-server."
+}
 
-prog=$0
-
-jobs=8
-warn_env=0
-if [ "_$CAT_DEPS_DIR" == "_" ]; then
-	CAT_DEPS_DIR="$HOME/cat_deps_dir"
-	echo "CAT_DEPS_DIR not found in env. Using default dependencies dir: $CAT_DEPS_DIR."
-	warn_env=1
-fi
+function check_env {
+	if [ "_$CAT_DEPS_DIR" == "_" ]; then
+		CAT_DEPS_DIR="$HOME/cat_deps_dir"
+		echo "CAT_DEPS_DIR not found in env. Using default dependencies dir: $CAT_DEPS_DIR."
+		warn_env=1
+	fi
+}
 
 function exitok {
 	if [ $warn_env -eq 1 ]; then
@@ -24,35 +31,15 @@ EOF
 	exit 0
 }
 
-
 depsdir=$CAT_DEPS_DIR
 debs="git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config"
 boost_output_dir=$depsdir/boost
-
-function help {
-	echo "Available commands:"
-	echo "    $prog install system_reqs          Installs apt dependencies. Requires sudo."
-	echo "          debian packages: $debs"
-	echo "    $prog download deps                Obtain 3rd party libs."
-	echo "    $prog install deps                 Compile & install 3rd party libs."
-	echo "    $prog                              Compile catapult-server."
-}
 
 function reqroot {
 	if [ "_`whoami`" != "_root" ]; then
 	  echo "Please run as root. (or use sudo)"
 	  exit 1
 	fi
-}
-
-function install_system_reqs {
-	reqroot
-	set -e
-	apt update
-	apt -y xupgrade
-	apt -y install $debs
-	set +e
-	exitok
 }
 
 function download_boost {
@@ -84,22 +71,6 @@ function download_all {
 	download_git_dependency zeromq cppzmq v4.7.1
 
 	download_git_dependency facebook rocksdb v6.13.3
-}
-
-
-function download_deps {
-	if [ -d $depsdir ]; then
-		echo "Warning: $depsdir already exists. Overwriting content."
-	fi
-	mkdir -p $depsdir
-
-	pushd $depsdir > /dev/null
-		mkdir -p source
-		pushd source > /dev/null
-			download_all
-		popd
-	popd
-	exitok
 }
 
 function install_boost {
@@ -192,23 +163,54 @@ function install_all {
 	done
 }
 
+#-------------------------------------------------------
+
+function install_system_reqs {
+	reqroot
+	set -e
+	apt update
+	apt -y upgrade
+	apt -y install $debs
+	set +e
+}
+
+function download_deps {
+	check_env
+	if [ -d $depsdir ]; then
+		echo "Warning: $depsdir already exists. Overwriting content."
+	fi
+	mkdir -p $depsdir
+	set -e
+	pushd $depsdir > /dev/null
+		mkdir -p source
+		pushd source > /dev/null
+			download_all
+		popd
+	popd
+	set +e
+}
+
 function install_deps {
+	check_env
+	if [ ! -d $boost_output_dir ]; then
+		download_deps
+	fi
 	pushd $depsdir > /dev/null
 		install_all
 	popd
-	exitok
 }
 
+#-------------------------------------------------------
 
 function install_main {
 	cmd=$1
 	shift
 	if [ "_$cmd" == "_system_reqs" ]; then
 		install_system_reqs $@
+		exitok
 	elif [ "_$cmd" == "_deps" ]; then
 		install_deps $@
-	else
-		help
+		exitok
 	fi
 }
 
@@ -217,12 +219,12 @@ function download {
 	shift
 	if [ "_$cmd" == "_deps" ]; then
 		download_deps $@
-	else
-		help
+		exitok
 	fi
 }
 
 function build_catapult {
+	check_env
 	mkdir -p _build
 	sep=";"
 	if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -239,7 +241,14 @@ function build_catapult {
 		ninja -j$jobs
 	popd
 	set +e
+	exitok
 }
+
+#-------------------------------------------------------
+
+prog=$0
+jobs=8
+warn_env=0
 
 cmd=$1
 shift
@@ -250,7 +259,7 @@ elif [ "_$cmd" == "_download" ]; then
 elif [ "_$cmd" == "_" ]; then
 	build_catapult $@
 fi
-
+#error flow
 help
 exit 1
 
