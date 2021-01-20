@@ -16,189 +16,37 @@ Required:
 
 These instructions have been verified to work on Ubuntu 20.04 with 8 GB of RAM and 4 CPU cores.
 
-### Installing the prerequisites on Ubuntu
+### Installing the prerequisites on debian/Ubuntu
 
-This code snippet installs the aforementioned prerequisites on apt-based systems (like Ubuntu), creates a `cat_deps_dir` folder under `$HOME` and points `CAT_DEPS_DIR` to it.
+This program installs the aforementioned system-wide prerequisites on apt-based systems (like Ubuntu or debian), creates a directory at the location pointed by the environment variable `CAT_DEPS_DIR`.
 
-Copy & paste it into a terminal (please mind the blank lines):
+## Step 1: Clone catapult-server, prepare the system and environment
 
+Copy & paste the whole snippet below into a terminal:
 ```sh
-sudo apt update
-sudo apt -y upgrade
-sudo apt -y install git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config
-
-zsh
-
-mkdir -p cat_deps_dir
+git clone https://github.com/nemtech/catapult-server.git
+cd catapult-server
+sudo scripts/make.sh install system_reqs
 export CAT_DEPS_DIR=$HOME/cat_deps_dir
 ```
 
 > **NOTE**:
 > If you want the `CAT_DEPS_DIR` environment variable to persist across sessions make sure to include the last line in the `~/.profile` or `~/.bashrc` files.
 
-## Step 1: Download all dependencies from source
+## Step 2: Download, build and install all dependencies from source
 
-Copy & paste the whole snippet below into a terminal:
-
+Type this into a terminal:
 ```sh
-function download_boost {
-	local boost_ver=1_${1}_0
-	local boost_ver_dotted=1.${1}.0
-
-	curl -o boost_${boost_ver}.tar.gz -SL https://dl.bintray.com/boostorg/release/${boost_ver_dotted}/source/boost_${boost_ver}.tar.gz
-	tar -xzf boost_${boost_ver}.tar.gz
-	mv boost_${boost_ver} boost
-}
-
-function download_git_dependency {
-	git clone git://github.com/${1}/${2}.git
-	cd ${2}
-	git checkout ${3}
-	cd ..
-}
-
-function download_all {
-	download_boost 75
-
-	download_git_dependency google googletest release-1.10.0
-	download_git_dependency google benchmark v1.5.2
-
-	download_git_dependency mongodb mongo-c-driver 1.17.2
-	download_git_dependency mongodb mongo-cxx-driver r3.6.1
-
-	download_git_dependency zeromq libzmq v4.3.3
-	download_git_dependency zeromq cppzmq v4.7.1
-
-	download_git_dependency facebook rocksdb v6.13.3
-}
-
-cd ${CAT_DEPS_DIR}
-mkdir source
-cd source
-download_all
+scripts/make.sh install deps
 ```
 
-## Step 2: Build and install all dependencies
-
-Copy & paste the whole snippet below into a terminal:
-
-```sh
-boost_output_dir=${CAT_DEPS_DIR}/boost
-
-function install_boost {
-	cd boost
-	./bootstrap.sh with-toolset=clang --prefix=${boost_output_dir}
-
-	b2_options=()
-	b2_options+=(--prefix=${boost_output_dir})
-	./b2 ${b2_options[@]} -j 8 stage release
-	./b2 install ${b2_options[@]}
-}
-
-function install_git_dependency {
-	cd ${2}
-	mkdir _build
-	cd _build
-
-	cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="${CAT_DEPS_DIR}/${1}" ${cmake_options[@]} ..
-	make -j 8 && make install
-}
-
-function install_google_test {
-	cmake_options=()
-	cmake_options+=(-DCMAKE_POSITION_INDEPENDENT_CODE=ON)
-	install_git_dependency google googletest
-}
-
-function install_google_benchmark {
-	cmake_options=()
-	cmake_options+=(-DBENCHMARK_ENABLE_GTEST_TESTS=OFF)
-	install_git_dependency google benchmark
-}
-
-function install_mongo_c_driver {
-	cmake_options=()
-	cmake_options+=(-DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF)
-	cmake_options+=(-DENABLE_MONGODB_AWS_AUTH=OFF)
-	cmake_options+=(-DENABLE_TESTS=OFF)
-	cmake_options+=(-DENABLE_EXAMPLES=OFF)
-	cmake_options+=(-DENABLE_SASL=OFF)
-	install_git_dependency mongodb mongo-c-driver
-}
-
-function install_mongo_cxx_driver {
-	cmake_options=()
-	cmake_options+=(-DBOOST_ROOT=${boost_output_dir})
-	cmake_options+=(-DCMAKE_CXX_STANDARD=17)
-	install_git_dependency mongodb mongo-cxx-driver
-}
-
-function install_zmq_lib {
-	cmake_options=()
-	cmake_options+=(-DWITH_TLS=OFF)
-	install_git_dependency zeromq libzmq
-}
-
-function install_zmq_cpp {
-	cmake_options=()
-	cmake_options+=(-DCPPZMQ_BUILD_TESTS=OFF)
-	install_git_dependency zeromq cppzmq
-}
-
-function install_rocks {
-	cmake_options=()
-	cmake_options+=(-DPORTABLE=1)
-	cmake_options+=(-DWITH_TESTS=OFF)
-	cmake_options+=(-DWITH_TOOLS=OFF)
-	cmake_options+=(-DWITH_BENCHMARK_TOOLS=OFF)
-	cmake_options+=(-DWITH_CORE_TOOLS=OFF)
-	cmake_options+=(-DWITH_GFLAGS=OFF)
-	install_git_dependency facebook rocksdb
-}
-
-function install_all {
-	declare -a installers=(
-		install_boost
-		install_google_test
-		install_google_benchmark
-		install_mongo_c_driver
-		install_mongo_cxx_driver
-		install_zmq_lib
-		install_zmq_cpp
-		install_rocks
-	)
-	for install in "${installers[@]}"
-	do
-		pushd source > /dev/null
-		${install}
-		popd > /dev/null
-	done
-}
-
-cd ${CAT_DEPS_DIR}
-install_all
-```
-
-## Step 3: Download and build catapult
+## Step 3: build catapult
 
 Finally, copy & paste the whole snippet below into a terminal:
 
 ```sh
-git clone https://github.com/nemtech/catapult-server.git
-cd catapult-server
-
-mkdir _build && cd _build
-BOOST_ROOT="${CAT_DEPS_DIR}/boost" cmake .. \
-	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	-DCMAKE_PREFIX_PATH="${CAT_DEPS_DIR}/facebook;${CAT_DEPS_DIR}/google;${CAT_DEPS_DIR}/mongodb;${CAT_DEPS_DIR}/zeromq" \
-	\
-	-GNinja
-ninja publish
-ninja -j4
+scripts/make.sh
 ```
-
-> **NOTE:**
-> On macOS, use ':' as separator character instead of ';' for ``CMAKE_PREFIX_PATH``.
 
 ## Step 4: Installation
 
