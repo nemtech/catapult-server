@@ -10,9 +10,11 @@ function help {
 	echo "    $prog                              Compile catapult-server."
 }
 
-function check_env {
+function set_depsdir {
+	depsdir=$CAT_DEPS_DIR
 	if [ "_$CAT_DEPS_DIR" == "_" ]; then
 		CAT_DEPS_DIR="$HOME/cat_deps_dir"
+		depsdir=$CAT_DEPS_DIR
 		echo "CAT_DEPS_DIR not found in env. Using default: $CAT_DEPS_DIR."
 		warn_env=1
 	fi
@@ -171,7 +173,7 @@ function install_system_reqs {
 }
 
 function download_deps {
-	check_env
+	set_depsdir
 	if [ -d $depsdir ]; then
 		echo "Warning: $depsdir already exists. Overwriting content."
 	fi
@@ -187,7 +189,7 @@ function download_deps {
 }
 
 function install_deps {
-	check_env
+	set_depsdir
 	if [ ! -d $boost_output_dir ]; then
 		download_deps
 	fi
@@ -220,7 +222,8 @@ function download {
 }
 
 function build_catapult {
-	check_env
+	echo "building using $jobs jobs"
+	set_depsdir
 	mkdir -p _build
 	sep=";"
 	if [[ "$OSTYPE" == "darwin"* ]]; then
