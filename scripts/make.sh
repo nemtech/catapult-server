@@ -181,7 +181,8 @@ function install_system_reqs {
 function download_deps {
 	set_depsdir
 	if [ -d $depsdir ]; then
-		echo "Warning: $depsdir already exists. Overwriting content."
+		echo "Warning: $depsdir already exists. Skipping."
+		return
 	fi
 	mkdir -p $depsdir
 	set -e
