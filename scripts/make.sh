@@ -224,6 +224,9 @@ function download {
 function build_catapult {
 	echo "building using $jobs jobs"
 	set_depsdir
+        if [ ! -d $boost_output_dir ]; then
+                install_deps
+        fi
 	mkdir -p _build
 	sep=";"
 	if [[ "$OSTYPE" == "darwin"* ]]; then

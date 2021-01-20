@@ -33,14 +33,14 @@ export CAT_DEPS_DIR=$HOME/cat_deps_dir
 > **NOTE**:
 > If you want the `CAT_DEPS_DIR` environment variable to persist across sessions make sure to include the last line in the `~/.profile` or `~/.bashrc` files.
 
-## Step 2: Download, build and install all dependencies from source
+## Optional step: Download, build and install all dependencies from source
 
 Type this into a terminal:
 ```sh
 scripts/make.sh install deps
 ```
 
-## Step 3: build catapult
+## Step 2: build catapult (installs deps if required)
 
 Finally, for building or re-building the software type into a terminal:
 
@@ -48,7 +48,7 @@ Finally, for building or re-building the software type into a terminal:
 scripts/make.sh
 ```
 
-## Step 4: Installation
+## Step 3: Installation
 
 Once the build finishes successfully, the tools in ``_build/bin`` are ready to use. Optionally, they can be made available globally by running:
 
