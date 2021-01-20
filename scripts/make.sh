@@ -179,10 +179,16 @@ function install_system_reqs {
 	set +e
 }
 
+force_download=0
+
 function download_deps {
 	if [ -d $depsdir ]; then
-		echo "Warning: $depsdir already exists. Skipping."
-		return
+		echo -n "Warning: ${depsdir} already exists. "
+		if [ ${force_download} -eq 0 ]; then
+			echo "Download skipped."
+			return
+		fi
+		echo ""
 	fi
 	mkdir -p $depsdir
 	set -e
@@ -227,6 +233,7 @@ function download {
 	shift
 	set_depsdir
 	if [ "_$cmd" == "_deps" ]; then
+		force_download=1
 		download_deps $@
 		exitok
 	fi
@@ -234,6 +241,7 @@ function download {
 
 function build_catapult {
 	set_depsdir
+	
 	echo "building using ${jobs} jobs"
 	echo "dependencies dir: ${depsdir}"
         if [ ! -d ${boost_output_dir} ]; then
