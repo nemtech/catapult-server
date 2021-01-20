@@ -228,11 +228,13 @@ function download {
 }
 
 function build_catapult {
-	echo "building using $jobs jobs"
+	echo "building using ${jobs} jobs"
 	set_depsdir
-        if [ ! -d $boost_output_dir ]; then
+	echo "dependencies dir: ${depsdir}"
+        if [ ! -d ${boost_output_dir} ]; then
                 install_deps
         fi
+	echo "dependencies OK at: ${depsdir}"
 	mkdir -p _build
 	sep=";"
 	if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -240,13 +242,13 @@ function build_catapult {
 	fi
 	set -e
 	pushd _build > /dev/null
-		BOOST_ROOT="$depsdir/boost" cmake .. \
+		BOOST_ROOT="${depsdir}/boost" cmake .. \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-		-DCMAKE_PREFIX_PATH="$depsdir/facebook$sep$depsdir/google$sep$depsdir/mongodb$sep$depsdir/zeromq" \
+		-DCMAKE_PREFIX_PATH="${depsdir}/facebook${sep}${depsdir}/google${sep}${depsdir}/mongodb${sep}${depsdir}/zeromq" \
 		\
 		-GNinja
 		ninja publish
-		ninja -j$jobs
+		ninja -j${jobs}
 	popd
 	set +e
 	exitok
