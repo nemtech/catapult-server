@@ -42,7 +42,7 @@ scripts/make.sh install deps
 
 ## Step 3: build catapult
 
-Finally, copy & paste the whole snippet below into a terminal:
+Finally, for building or re-building the software type into a terminal:
 
 ```sh
 scripts/make.sh

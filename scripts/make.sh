@@ -13,7 +13,7 @@ function help {
 function check_env {
 	if [ "_$CAT_DEPS_DIR" == "_" ]; then
 		CAT_DEPS_DIR="$HOME/cat_deps_dir"
-		echo "CAT_DEPS_DIR not found in env. Using default dependencies dir: $CAT_DEPS_DIR."
+		echo "CAT_DEPS_DIR not found in env. Using default: $CAT_DEPS_DIR."
 		warn_env=1
 	fi
 }
@@ -30,10 +30,6 @@ EOF
 	fi
 	exit 0
 }
-
-depsdir=$CAT_DEPS_DIR
-debs="git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config"
-boost_output_dir=$depsdir/boost
 
 function reqroot {
 	if [ "_`whoami`" != "_root" ]; then
@@ -249,9 +245,13 @@ function build_catapult {
 prog=$0
 jobs=8
 warn_env=0
+depsdir=$CAT_DEPS_DIR
+debs="git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config"
+boost_output_dir=$depsdir/boost
 
 cmd=$1
 shift
+
 if [ "_$cmd" == "_install" ]; then
 	install_main $@
 elif [ "_$cmd" == "_download" ]; then
@@ -259,6 +259,7 @@ elif [ "_$cmd" == "_download" ]; then
 elif [ "_$cmd" == "_" ]; then
 	build_catapult $@
 fi
+
 #error flow
 help
 exit 1
