@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 
 message("--- locating zeromq dependencies ---")
 find_package(cppzmq 4.7.1 EXACT REQUIRED)

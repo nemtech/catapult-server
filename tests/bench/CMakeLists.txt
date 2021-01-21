@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 
 # find and set benchmark includes
 function(catapult_add_benchmark_dependencies TARGET_NAME)

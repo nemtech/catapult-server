@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 
 function(catapult_tx_plugin_src PLUGIN_BASE_NAME)
 	# create an sdk lib
