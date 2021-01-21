@@ -243,9 +243,9 @@ function build_catapult {
 	set_depsdir
 	echo "building using ${jobs} jobs"
 	echo "dependencies dir: ${depsdir}"
-        if [ ! -d ${boost_output_dir} ]; then
-                install_deps
-        fi
+	if [ ! -d ${boost_output_dir} ]; then
+		install_deps
+	fi
 	echo "dependencies OK at: ${depsdir}"
 	mkdir -p _build
 	sep=";"
