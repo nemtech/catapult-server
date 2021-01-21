@@ -272,7 +272,7 @@ function build_catapult {
 prog=$0
 jobs=8
 warn_env=0
-debs="git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config"
+debs="git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config libpython-dev"
 
 cmd=$1
 shift
