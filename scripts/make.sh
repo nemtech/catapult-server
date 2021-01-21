@@ -42,8 +42,8 @@ EOF
 
 function reqroot {
 	if [ "_`whoami`" != "_root" ]; then
-	  echo "Please run as root. (or use sudo)"
-	  exit 1
+		echo "Please run as root. (or use sudo)"
+		exit 1
 	fi
 }
 
@@ -241,7 +241,6 @@ function download {
 
 function build_catapult {
 	set_depsdir
-	
 	echo "building using ${jobs} jobs"
 	echo "dependencies dir: ${depsdir}"
         if [ ! -d ${boost_output_dir} ]; then
@@ -288,7 +287,4 @@ fi
 #error flow
 help
 exit 1
-
-
-
 
