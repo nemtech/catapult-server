@@ -2,6 +2,7 @@
 # This program automates common/essential tasks for building catapult-server
 
 function help {
+	echo "$0 creates a _build directory ready to be compiled."
 	echo "Available commands:"
 	echo "    $prog install system_reqs          Installs apt dependencies. Requires sudo."
 	echo "          debian packages: $debs"
@@ -239,7 +240,7 @@ function download {
 	fi
 }
 
-function build_catapult {
+function make_build_dir {
 	set_depsdir
 	echo "building using ${jobs} jobs"
 	echo "dependencies dir: ${depsdir}"
@@ -247,12 +248,12 @@ function build_catapult {
 		install_deps
 	fi
 	echo "dependencies OK at: ${depsdir}"
-	mkdir -p _build
 	sep=";"
 	if [[ "$OSTYPE" == "darwin"* ]]; then
 		sep=":"
 	fi
 	set -e
+	mkdir -p _build
 	pushd _build > /dev/null
 		BOOST_ROOT="${depsdir}/boost" cmake .. \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -260,9 +261,10 @@ function build_catapult {
 		\
 		-GNinja
 		ninja publish
-		ninja -j${jobs}
 	popd
 	set +e
+	echo "Sources are ready in directory _build"
+	echo "Compile: cd _build; ninja -j${jobs}"
 	exitok
 }
 
@@ -281,7 +283,7 @@ if [ "_$cmd" == "_install" ]; then
 elif [ "_$cmd" == "_download" ]; then
 	download $@
 elif [ "_$cmd" == "_" ]; then
-	build_catapult $@
+	make_build_dir $@
 fi
 
 #error flow
