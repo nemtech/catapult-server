@@ -264,7 +264,11 @@ function make_build_dir {
 	popd
 	set +e
 	echo "Sources are ready in directory _build"
-	echo "Compile: cd _build; ninja -j${jobs}"
+	echo "Compile:"
+	echo "  cd _build"
+	echo "  ninja -j${jobs}"
+	echo "Run:"
+	echo "  export LD_LIBRARY_PATH=${depsdir}/boost/lib:${depsdir}/facebook/lib:${depsdir}/google/lib:${depsdir}/mongodb/lib:${depsdir}/zeromq/lib"
 	exitok
 }
 
@@ -273,7 +277,7 @@ function make_build_dir {
 prog=$0
 jobs=8
 warn_env=0
-debs="git gcc g++ cmake curl libssl-dev ninja-build zsh pkg-config libpython-dev"
+debs="git gcc g++ cmake curl libssl-dev ninja-build pkg-config libpython-dev"
 
 cmd=$1
 shift

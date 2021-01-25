@@ -10,7 +10,6 @@ Required:
 
 - OpenSSL dev library (`libssl-dev`) >= 1.1.1g.
 - `pkg-config` (for zeromq).
-- `zsh` (for Step 2). This shell is known to work, other shells have not been tested.
 - An environment variable named `CAT_DEPS_DIR` defined as the directory containing all catapult dependencies.
 - About 15 GB of free disk space.
 
