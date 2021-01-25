@@ -46,7 +46,7 @@ scripts/configure.sh install deps
 
 ## Step 2: Prepare build directory
 
-For creating/updating the _build directory type into a terminal:
+For creating/updating the `_build` directory type into a terminal:
 
 ```sh
 scripts/configure.sh
