@@ -25,7 +25,7 @@ Copy & paste the whole snippet below into a terminal:
 ```sh
 git clone https://github.com/nemtech/catapult-server.git
 cd catapult-server
-sudo scripts/configure.sh install system_reqs
+sudo scripts/configure-manual.sh install system_reqs
 export CAT_DEPS_DIR=$HOME/cat_deps_dir
 ```
 
@@ -37,18 +37,18 @@ export CAT_DEPS_DIR=$HOME/cat_deps_dir
 Type this into a terminal:
 
 ```sh
-scripts/configure.sh install deps
+scripts/configure-manual.sh install deps
 ```
 
 > **NOTE**:
-> If you only want to download the dependencies (without building and installing them) enter the command ``scripts/configure.sh download deps`` instead. Type ``scripts/configure.sh --help`` for its summary of commands.
+> If you only want to download the dependencies (without building and installing them) enter the command ``scripts/configure-manual.sh download deps`` instead. Type ``scripts/configure-manual.sh --help`` for its summary of commands.
 
 ## Step 2: Prepare build directory
 
 For creating/updating the `_build` directory type into a terminal:
 
 ```sh
-scripts/configure.sh
+scripts/configure-manual.sh
 ```
 
 It will handle if you missed the previous optional step.
