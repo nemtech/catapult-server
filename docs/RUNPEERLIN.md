@@ -23,8 +23,8 @@ If you have not launched a network yet, move directly to ["Edit the node propert
 3. To add the network configuration to the peer node, run the following commands from the ``catapult-server/_build`` directory.
 
    ```sh
-   mkdir data
-   cp -r network-config/seed/network-test/ data/
+   mkdir seed
+   cp -r network-config/seed/network-test/ seed/
    cp -r network-config/resources/ resources/
    ```
 
@@ -106,6 +106,7 @@ Catapult uses TLS 1.3 to provide secure connections and identity assurance among
     ```ini
     [storage]
 
+    seedDirectory = ../seed
     dataDirectory = ../data
     certificateDirectory = ../certificate
     pluginsDirectory = .
