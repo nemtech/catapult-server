@@ -77,7 +77,7 @@ namespace catapult { namespace tools { namespace addressgen {
 
 				for (auto& descriptor : m_descriptors) {
 					auto searchString = descriptor.SearchString;
-					while (!searchString.empty() && (searchString.size() > descriptor.BestMatchSize || !descriptor.pBestKeyPair)) {
+					while (!searchString.empty() || (searchString.size() > descriptor.BestMatchSize || !descriptor.pBestKeyPair)) {
 						auto matchIndex = addressString.find(searchString);
 						auto isMatch = std::string::npos != matchIndex;
 						if (descriptor.MatchStart)
