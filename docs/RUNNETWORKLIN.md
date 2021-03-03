@@ -230,3 +230,10 @@ Run the nemesis block generator a second time, this time with the correct mosaic
 ## Configure the node
 
 Follow the [next guide](RUNPEERLIN.md) to configure a peer node and start the network.
+
+## Fast lane (Development only)
+
+The command `scripts/configure-manual.sh devnet create` automates all previous steps providing
+a 1 liner command for creating pre-configured networks suitable for development purposes.
+
+See [next guide](RUNPEERLIN.md) to learn more about devnet.

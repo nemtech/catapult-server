@@ -187,3 +187,29 @@ Among other things, you should see a line reporting the current chain height:
 ```
 
 The health tool connects to all nodes listed in the ``resources/peers-p2p.json`` so make sure you have added your own node to the list.
+
+## Fast lane (Development only)
+
+The command `scripts/configure-manual.sh devnet create` automates all previous steps providing
+a 1 liner command for creating pre-configured networks suitable for development purposes.
+
+`devnet` is a local private network that runs in the host computer via its local IP address.
+Nodes run one catapult-server process each, launched with different configuration files
+stored in directories ``_build/node_*``.
+
+node-7900 (nemesis node, or the first node) listents on port 7900 and is configured with roles `IPv4,Peer,Api,Voting`.
+
+The nemesis block is pre-configured for distributing all harvesting power and all mosaics to node-7900.
+
+Further nodes can be added with the `node` command. See help `scripts/configure-manual.sh devnet node`.
+
+For the complete list of `devnet` commands execute `scripts/configure-manual.sh devnet`
+
+Once a devnet has been configured launch catapult-server on the desired node directory:
+
+```
+cd _build/bin
+./catapult-server ../node_7900 
+```
+
+Logs are written in directory ../node_<port>/logs

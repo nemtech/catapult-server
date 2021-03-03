@@ -48,7 +48,7 @@ scripts/configure-manual.sh install deps
 For creating/updating the ``_build`` directory type into a terminal:
 
 ```sh
-scripts/configure-manual.sh
+scripts/configure-manual.sh build
 ```
 
 It will handle if you missed the previous optional step.
@@ -76,7 +76,7 @@ sudo ninja install
 Regardless of whether the tools are installed globally or not, their dependencies must be accessible before running them so make sure to update ``LD_LIBRARY_PATH``:
 
 ```sh
-export LD_LIBRARY_PATH=$CAT_DEPS_DIR/boost/lib:$CAT_DEPS_DIR/facebook/lib:$CAT_DEPS_DIR/google/lib:$CAT_DEPS_DIR/mongodb/lib:$CAT_DEPS_DIR/zeromq/lib
+export LD_LIBRARY_PATH=$CAT_DEPS_DIR/boost/lib:$CAT_DEPS_DIR/facebook/lib:$CAT_DEPS_DIR/google/lib:$CAT_DEPS_DIR/mongodb/lib:$CAT_DEPS_DIR/zeromq/lib:./
 ```
 
 Verify that the tools are working correctly by running:
