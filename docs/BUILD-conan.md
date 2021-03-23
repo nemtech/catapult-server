@@ -83,6 +83,14 @@ conan install .. --build missing
 
   Once the build finishes successfully, the tools in ``_build/bin`` are ready to use. However, the dependencies in ``_build/deps`` must be accessible so make sure to add this folder to the ``LD_LIBRARY_PATH`` environment variable (Linux) or ``DYLD_LIBRARY_PATH`` (Mac).
 
+  One way of doing this is by running this from the ``_build`` directory:
+
+  ```sh
+  export LD_LIBRARY_PATH=$PWD/deps
+  ```
+
+  You will need to run this line every new session, unless you add it at the end of your ``~/.bashrc`` or ``~/.profile`` files.
+
 * Install (Optional):
 
   The catapult tools can be made available globally by running:
