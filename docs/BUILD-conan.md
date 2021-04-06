@@ -4,21 +4,30 @@ Following instructions should work on Mac, Linux (Ubuntu 20.04) and Windows.
 
 ## Prerequisites
 
-* **On Linux and Mac**:
+* **On Linux**:
 
-  ```sh
-  sudo apt install build-essential git cmake ninja-build
-  conan profile new default --detect
-  conan profile update settings.compiler.libcxx=libstdc++11 default
-  ```
+  1. Install the compiler:
+
+     ```sh
+     sudo apt install build-essential git cmake ninja-build
+     ```
+
+  2. Install [Conan](https://conan.io/downloads.html).
+
+  3. Set the right C++ ABI for Conan:
+
+     ```sh
+     conan profile new default --detect
+     conan profile update settings.compiler.libcxx=libstdc++11 default
+     ```
 
 * **On Windows**:
 
-  Install [Visual Studio](https://visualstudio.microsoft.com/) and [Git for Windows](https://git-scm.com/download/win).
+  1. Install [Visual Studio](https://visualstudio.microsoft.com/) and [Git for Windows](https://git-scm.com/download/win).
 
-  Run all the commands below from a command prompt that has access to Visual Studio and Git. This can be accomplished by using the "Native Tools Command Prompt" shortcut installed by Visual Studio on the Start Menu.
+     Run all commands from a command prompt that has access to Visual Studio and Git. This can be accomplished by using the "Native Tools Command Prompt" shortcut installed by Visual Studio on the Start Menu.
 
-* **On both**: Install [Conan](https://conan.io/downloads.html).
+  2. Install [Conan](https://conan.io/downloads.html).
 
 ## Step 1: Build dependencies
 
@@ -40,7 +49,7 @@ conan install .. --build missing
 ### Windows + Visual Studio
 
 > **NOTE:**
-> Make sure to use the correct ``PYTHON_EXECUTABLE`` path! Python3 is required for the build to produce some header files. If Python3 cannot be found you won't notice until more than one hour into the build process because of some missing headers. You can find your Python3 path by running ``where pyton3``.
+> Make sure to use the correct ``PYTHON_EXECUTABLE`` path! Python3 is required for the build to produce some header files. If Python3 cannot be found you won't notice until more than one hour into the build process because of some missing headers. You can find your Python3 path by running ``where python3``.
 
 * Generate project files for Visual Studio 2019:
 
