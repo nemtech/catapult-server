@@ -29,6 +29,22 @@ Following instructions should work on Mac, Linux (Ubuntu 20.04) and Windows.
 
   2. Install [Conan](https://conan.io/downloads.html).
 
+* **On Mac**:
+
+  1. Install the compiler:
+
+     ```sh
+     xcode-select —install
+     ```
+
+  2. Install build dependencies:
+
+     ```sh
+     brew install git cmake ninja
+     ```
+
+  3. Install [Conan](https://conan.io/downloads.html).
+
 ## Step 1: Build dependencies
 
 While Conan will be building and installing packages, you might want to go for a ☕ (or lunch),
