@@ -72,6 +72,7 @@ def main():
             prepare_docker_compose_file(compose_template_filepath, prepare_replacements, outfile)
 
     environment_manager = EnvironmentManager(args.dry_run)
+    environment_manager.set_env_var('COMPOSE_HTTP_TIMEOUT', '200')
     environment_manager.mkdirs(OUTPUT_DIR / 'logs', exist_ok=True)
     environment_manager.mkdirs(OUTPUT_DIR / 'workdir', exist_ok=True)
 

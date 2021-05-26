@@ -22,20 +22,14 @@ pipeline {
 
         stage('build servers') {
             parallel {
-                stage('gcc 10 (conan)') {
+                stage('gcc 10 (westmere)') {
                     steps {
                         script {
-                            dispatch_build_job('gcc-10', 'tests-conan', 'ubuntu')
+                            dispatch_build_job('gcc-10-westmere', 'tests-metal', 'ubuntu')
                         }
                     }
                 }
-                stage('gcc 10 (metal)') {
-                    steps {
-                        script {
-                            dispatch_build_job('gcc-10', 'tests-metal', 'ubuntu')
-                        }
-                    }
-                }
+
                 stage('gcc 11 (metal) [fedora]') {
                     steps {
                         script {
@@ -48,42 +42,6 @@ pipeline {
                     steps {
                         script {
                             dispatch_build_job('clang-11', 'tests-metal', 'ubuntu')
-                        }
-                    }
-                }
-                stage('clang 12 (conan)') {
-                    steps {
-                        script {
-                            dispatch_build_job('clang-12', 'tests-conan', 'ubuntu')
-                        }
-                    }
-                }
-                stage('clang 12 (metal)') {
-                    steps {
-                        script {
-                            dispatch_build_job('clang-12', 'tests-metal', 'ubuntu')
-                        }
-                    }
-                }
-
-                stage('clang ausan') {
-                    steps {
-                        script {
-                            dispatch_build_job('clang-ausan', 'tests-metal', 'ubuntu')
-                        }
-                    }
-                }
-                stage('clang tsan') {
-                    steps {
-                        script {
-                            dispatch_build_job('clang-tsan', 'tests-metal', 'ubuntu')
-                        }
-                    }
-                }
-                stage('clang diagnostics') {
-                    steps {
-                        script {
-                            dispatch_build_job('clang-12', 'tests-diagnostics', 'ubuntu')
                         }
                     }
                 }
