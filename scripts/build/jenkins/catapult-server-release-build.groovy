@@ -148,41 +148,41 @@ pipeline {
             }
         }
 
-        stage('bump version') {
-            when {
-                expression { is_public_build() && SHOULD_PUBLISH_BUILD_IMAGE.toBoolean() }
-            }
-            steps {
-                script {
-                    sh 'ls -alh ./catapult-src/scripts/build/versions.properties'
-                    new_version = bump_version()
+    //     stage('bump version') {
+    //         when {
+    //             expression { is_public_build() && SHOULD_PUBLISH_BUILD_IMAGE.toBoolean() }
+    //         }
+    //         steps {
+    //             script {
+    //                 sh 'ls -alh ./catapult-src/scripts/build/versions.properties'
+    //                 new_version = bump_version()
 
-                    dir('catapult-src') {
-                        // NOTE: assuming correct branch is checked out
-                        withCredentials([usernamePassword(
-                                credentialsId: 'nemtechopsbot-git',
-                                passwordVariable: 'GIT_PASSWORD',
-                                usernameVariable: 'GIT_USERNAME')]) {
-                            sh """
-                                git config --global user.email "nemtechopsbot@127.0.0.1"
-                                git config --global user.name "nemtechopsbot"
+    //                 dir('catapult-src') {
+    //                     // NOTE: assuming correct branch is checked out
+    //                     withCredentials([usernamePassword(
+    //                             credentialsId: 'nemtechopsbot-git',
+    //                             passwordVariable: 'GIT_PASSWORD',
+    //                             usernameVariable: 'GIT_USERNAME')]) {
+    //                         sh """
+    //                             git config --global user.email "nemtechopsbot@127.0.0.1"
+    //                             git config --global user.name "nemtechopsbot"
 
-                                git add ./scripts/build/server.version.yaml
-                                git add ./src/catapult/version/version_inc.h
-                                git commit -m \"bump version to ${bumped_version}\"
-                                git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/nemtech/catapult-server.git
-                            """
-                        }
+    //                             git add ./scripts/build/server.version.yaml
+    //                             git add ./src/catapult/version/version_inc.h
+    //                             git commit -m \"bump version to ${bumped_version}\"
+    //                             git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/nemtech/catapult-server.git
+    //                         """
+    //                     }
 
-                        sh """
-                            git status
-                            git log -1
-                        """
-                    }
-                }
-            }
-        }
-    }
+    //                     sh """
+    //                         git status
+    //                         git log -1
+    //                     """
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 def is_public_build() {
