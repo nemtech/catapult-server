@@ -27,7 +27,8 @@ def prepare_docker_compose_file(input_filepath, prepare_replacements, outfile):
     replacements = [
         ('{{IMAGE_NAME}}', image_name),
         ('{{COMPILER_CONFIGURATION}}', prepare_replacements['compiler_configuration']),
-        ('{{USER}}', '"{}"'.format(prepare_replacements['user'])),
+        ('{{ADD_USER}}', '' if 'win32' == sys.platform else 'user: "{}"'.format(prepare_replacements['user'])),
+        ('{{ROOTDIR}}', 'c:\\' if 'win32' == sys.platform else '/'),
 
         ('{{BUILD_NUMBER}}', get_image_label(image_name)),
         ('{{NETWORK_IP}}', '3000'),

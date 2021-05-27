@@ -6,8 +6,14 @@ from BasicBuildManager import BasicBuildManager
 from environment import EnvironmentManager
 from process import ProcessManager
 
-CCACHE_ROOT = '/jenkins_cache/ccache'
-CONAN_ROOT = '/jenkins_cache/conan'
+
+def root_directory(directory_name):
+    root_directory_prefix = 'c:\\' if 'win32' == sys.platform else '/'
+    return root_directory_prefix + directory_name
+
+
+CCACHE_ROOT = root_directory('jenkins_cache/ccache')
+CONAN_ROOT = root_directory('jenkins_cache/conan')
 
 SRC_DIR = Path('catapult-src').resolve()
 OUTPUT_DIR = Path('output').resolve()
@@ -64,10 +70,10 @@ class OptionsManager(BasicBuildManager):
 
 def get_volume_mappings(ccache_path, conan_path):
     mappings = [
-        (SRC_DIR, '/catapult-src'),
-        (BINARIES_DIR.resolve(), '/binaries'),
-        (conan_path, '/conan'),
-        (ccache_path, '/ccache')
+        (SRC_DIR, root_directory('catapult-src')),
+        (BINARIES_DIR.resolve(), root_directory('binaries')),
+        (conan_path, root_directory('conan')),
+        (ccache_path, root_directory('ccache'))
     ]
 
     return ['--volume={}:{}'.format(str(key), value) for key, value in sorted(mappings)]
@@ -79,15 +85,22 @@ def create_docker_run_command(options, compiler_configuration_filepath, build_co
 
     docker_args = [
         'docker', 'run',
-        '--rm',
-        '--user={}'.format(user),
-    ] + docker_run_settings + volume_mappings + [
+        '--rm'
+    ]
+
+    if 'win32' != sys.platform:
+        docker_args.append('--user={}'.format(user))
+
+    docker_args.extend(docker_run_settings)
+    docker_args.extend(volume_mappings)
+
+    docker_args.extend([
         options.build_base_image_name,
         'python3', '/catapult-src/scripts/build/runDockerBuildInnerBuild.py',
         # assume paths are relative to workdir
         '--compiler-configuration=/{}'.format(compiler_configuration_filepath),
         '--build-configuration=/{}'.format(build_configuration_filepath)
-    ]
+    ])
 
     return docker_args
 
@@ -150,6 +163,12 @@ def main():
         print(options.build_base_image_name)
         print(options.prepare_base_image_name)
         return
+
+    print('*** *** *** *** *** ***')
+    print('SRC_DIR:       {}'.format(SRC_DIR))
+    print('OUTPUT_DIR:    {}'.format(OUTPUT_DIR))
+    print('BINARIES_DIR:  {}'.format(BINARIES_DIR))
+    print('*** *** *** *** *** ***')
 
     docker_run = create_docker_run_command(options, args.compiler_configuration, args.build_configuration, args.user)
 

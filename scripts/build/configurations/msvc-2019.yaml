@@ -1,0 +1,2 @@
+compiler: ../compilers/msvc-2019.yaml
+architecture: skylake

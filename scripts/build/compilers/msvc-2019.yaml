@@ -1,0 +1,9 @@
+c: msvc
+cpp: bar
+version: 2019
+
+stl:
+  version: baz
+  lib: marker
+
+deps:
