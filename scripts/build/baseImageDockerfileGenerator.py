@@ -116,6 +116,12 @@ class OptionsManager:
     def libzmq(self):
         descriptor = self._zmq_descriptor()
         descriptor.options += ['-DWITH_TLS=OFF']
+
+        if self.is_clang:
+            # Xeon-based build machine, even with -mskylake seems to do miscompilation in libzmq,
+            # try to pass additional flags to disable faulty optimizations
+            descriptor.cxxflags += ['-mno-avx', '-mno-avx2']
+
         return self._cmake(descriptor)
 
     def cppzmq(self):
