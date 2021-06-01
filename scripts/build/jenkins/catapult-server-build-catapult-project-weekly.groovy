@@ -22,6 +22,14 @@ pipeline {
 
         stage('build servers') {
             parallel {
+                stage('gcc 8 (metal) [debian]') {
+                    steps {
+                        script {
+                            dispatch_build_job('gcc-8', 'tests-metal', 'debian')
+                        }
+                    }
+                }
+
                 stage('gcc 10 (westmere)') {
                     steps {
                         script {

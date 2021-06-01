@@ -6,10 +6,10 @@ pipeline {
     parameters {
         gitParameter branchFilter: 'origin/(.*)', defaultValue: 'main', name: 'MANUAL_GIT_BRANCH', type: 'PT_BRANCH'
         choice name: 'COMPILER_CONFIGURATION',
-            choices: ['gcc-10', 'gcc-10-westmere', 'gcc-11', 'clang-11', 'clang-12', 'clang-ausan', 'clang-tsan'],
+            choices: ['gcc-10', 'gcc-8', 'gcc-11', 'gcc-10-westmere', 'clang-11', 'clang-12', 'clang-ausan', 'clang-tsan'],
             description: 'compiler configuration'
         choice name: 'OPERATING_SYSTEM',
-            choices: ['ubuntu', 'fedora'],
+            choices: ['ubuntu', 'fedora', 'debian'],
             description: 'operating system'
 
         booleanParam name: 'SHOULD_BUILD_CONAN_LAYER', description: 'true to build conan layer', defaultValue: false

@@ -31,6 +31,7 @@
 #include "tests/test/local/FilechainTestUtils.h"
 #include "tests/test/local/LocalNodeTestState.h"
 #include "tests/test/local/LocalTestUtils.h"
+#include "tests/test/nemesis/NemesisCompatibleConfiguration.h"
 #include "tests/test/nodeps/Filesystem.h"
 #include "tests/test/other/mocks/MockBlockHeightCapturingNotificationObserver.h"
 #include "tests/test/plugins/PluginManagerFactory.h"
@@ -322,13 +323,29 @@ namespace catapult { namespace local {
 			loader.executeAndCommit(stateRef, extensions::StateHashVerification::Disabled);
 		}
 
+		void SetBlockChainConfiguration(model::BlockChainConfiguration& config) {
+			config.Plugins.emplace("catapult.plugins.hashcache", utils::ConfigurationBag({ { "", { {} } } }));
+
+			// set the number of rollback blocks to zero to avoid unnecessarily influencing height-dominant tests
+			config.MaxRollbackBlocks = 0;
+		}
+
+		config::CatapultConfiguration CreateStateHashEnabledCatapultConfiguration(const std::string& dataDirectory) {
+			auto config = test::CreateCatapultConfigurationWithNemesisPluginExtensions(dataDirectory);
+			SetBlockChainConfiguration(const_cast<model::BlockChainConfiguration&>(config.BlockChain));
+
+			const_cast<config::NodeConfiguration&>(config.Node).EnableCacheDatabaseStorage = true;
+			const_cast<model::BlockChainConfiguration&>(config.BlockChain).EnableVerifiableState = true;
+			return config;
+		}
+
 		template<typename TAction>
 		void ExecuteWithStorage(io::BlockStorageCache& storage, TAction action) {
 			// Arrange:
 			test::TempDirectoryGuard tempDataDirectory;
 			config::CatapultDataDirectoryPreparer::Prepare(tempDataDirectory.name());
 
-			auto config = test::CreateStateHashEnabledCatapultConfiguration(tempDataDirectory.name());
+			auto config = CreateStateHashEnabledCatapultConfiguration(tempDataDirectory.name());
 			auto pPluginManager = test::CreatePluginManagerWithRealPlugins(config);
 			auto observerFactory = [&pluginManager = *pPluginManager](const auto&) { return pluginManager.createObserver(); };
 

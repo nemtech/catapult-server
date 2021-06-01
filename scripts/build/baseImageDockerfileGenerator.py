@@ -284,7 +284,7 @@ class FedoraSystem:
         ], RPM_PACKAGES=' '.join(rpm_packages))
 
 
-SYSTEMS = {'ubuntu': UbuntuSystem, 'fedora': FedoraSystem}
+SYSTEMS = {'ubuntu': UbuntuSystem, 'debian': UbuntuSystem, 'fedora': FedoraSystem}
 
 
 def generate_phase_os(options):

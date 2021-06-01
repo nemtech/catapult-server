@@ -28,12 +28,6 @@ namespace catapult { namespace model { struct Block; } }
 
 namespace catapult { namespace test {
 
-	/// Creates a catapult configuration around \a maxDifficultyBlocks and \a dataDirectory.
-	config::CatapultConfiguration CreateFileChainCatapultConfiguration(uint32_t maxDifficultyBlocks, const std::string& dataDirectory);
-
-	/// Creates a state hash enabled catapult configuration around \a dataDirectory.
-	config::CatapultConfiguration CreateStateHashEnabledCatapultConfiguration(const std::string& dataDirectory);
-
 	/// Gets the test nemesis block key pairs.
 	std::vector<crypto::KeyPair> GetNemesisKeyPairs();
 

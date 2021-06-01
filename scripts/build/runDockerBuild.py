@@ -102,9 +102,10 @@ def cleanup_directories(environment_manager, ccache_root_directory, conan_root_d
 
 def prepare_docker_image(process_manager, container_id, prepare_replacements):
     destination_image_label = prepare_replacements['destination_image_label']
-    cid_filepath = '{}.cid'.format(destination_image_label)
+    cid_filepath = Path('{}.cid'.format(destination_image_label))
     if not container_id:
-        Path(cid_filepath).unlink(missing_ok=True)
+        if cid_filepath.exists():
+            cid_filepath.unlink()
 
     build_disposition = prepare_replacements['build_disposition']
     disposition_to_repository_map = {

@@ -286,9 +286,17 @@ endif()
 
 ### define target helper functions
 
+# sets cxx std version
+function(catapult_set_cxx_std_version TARGET_NAME)
+	set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 17)
+	if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" AND "${CMAKE_CXX_COMPILER_VERSION}" MATCHES "^8.")
+		target_link_libraries(${TARGET_NAME} "stdc++fs")
+	endif()
+endfunction()
+
 # used to define a catapult target (library, executable) and automatically enables PCH for clang
 function(catapult_target TARGET_NAME)
-	set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 17)
+	catapult_set_cxx_std_version(${TARGET_NAME})
 
 	# indicate boost as a dependency
 	target_link_libraries(${TARGET_NAME} ${Boost_LIBRARIES})
@@ -338,7 +346,8 @@ endfunction()
 function(catapult_object_library TARGET_NAME)
 	add_library(${TARGET_NAME} OBJECT ${ARGN})
 	set_property(TARGET ${TARGET_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
-	set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 17)
+
+	catapult_set_cxx_std_version(${TARGET_NAME})
 endfunction()
 
 # used to define a catapult library, creating an appropriate source group and adding a library

@@ -212,7 +212,7 @@ namespace catapult { namespace local {
 
 		// - set up static nodes
 		auto staticNodes = std::vector<ionet::Node>{
-			CreateNamedLocalHostNode(pAcceptorServer->publicKeyAt(0), "x", 0, "alice"), // invalid host
+			CreateNamedLocalHostNode(pAcceptorServer->publicKeyAt(0), "x&y", 0, "alice"), // invalid host
 			CreateNamedLocalHostNode(pAcceptorServer->publicKeyAt(1), "127.0.0.1", 1, "bob") // valid host
 		};
 		context.boot(staticNodes);

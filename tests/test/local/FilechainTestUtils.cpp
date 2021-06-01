@@ -28,31 +28,6 @@
 
 namespace catapult { namespace test {
 
-	namespace {
-		void SetBlockChainConfiguration(model::BlockChainConfiguration& config, uint32_t maxDifficultyBlocks) {
-			config.Plugins.emplace("catapult.plugins.hashcache", utils::ConfigurationBag({ { "", { {} } } }));
-
-			if (maxDifficultyBlocks > 0)
-				config.MaxDifficultyBlocks = maxDifficultyBlocks;
-
-			// set the number of rollback blocks to zero to avoid unnecessarily influencing height-dominant tests
-			config.MaxRollbackBlocks = 0;
-		}
-	}
-
-	config::CatapultConfiguration CreateFileChainCatapultConfiguration(uint32_t maxDifficultyBlocks, const std::string& dataDirectory) {
-		auto config = test::CreateCatapultConfigurationWithNemesisPluginExtensions(dataDirectory);
-		SetBlockChainConfiguration(const_cast<model::BlockChainConfiguration&>(config.BlockChain), maxDifficultyBlocks);
-		return config;
-	}
-
-	config::CatapultConfiguration CreateStateHashEnabledCatapultConfiguration(const std::string& dataDirectory) {
-		auto config = CreateFileChainCatapultConfiguration(0, dataDirectory);
-		const_cast<config::NodeConfiguration&>(config.Node).EnableCacheDatabaseStorage = true;
-		const_cast<model::BlockChainConfiguration&>(config.BlockChain).EnableVerifiableState = true;
-		return config;
-	}
-
 	std::vector<crypto::KeyPair> GetNemesisKeyPairs() {
 		std::vector<crypto::KeyPair> nemesisKeyPairs;
 		for (const auto* pRecipientPrivateKeyString : test::Test_Network_Private_Keys)

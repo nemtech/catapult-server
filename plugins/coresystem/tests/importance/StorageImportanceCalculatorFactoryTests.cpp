@@ -809,9 +809,9 @@ namespace catapult { namespace importance {
 		template<typename TTraits>
 		void AssertCanRoundtripToPointAfterNemesis() {
 			// Arrange:
-			PrepareRollbackTest<TTraits>([](const auto& addresses, const auto& context, auto& holder) {
-				static constexpr auto Importance_Height = model::ImportanceHeight(615);
+			static constexpr model::ImportanceHeight Importance_Height(615);
 
+			PrepareRollbackTest<TTraits>([](const auto& addresses, const auto& context, auto& holder) {
 				// Act:
 				auto pCalculator = context.createReadCalculator({});
 				pCalculator->recalculate(Default_Calculation_Mode, Importance_Height, holder.get());
@@ -871,9 +871,9 @@ namespace catapult { namespace importance {
 		template<typename TTraits>
 		void AssertCanRoundtripToNemesis() {
 			// Arrange:
-			PrepareRollbackTest<TTraits>([](const auto& addresses, const auto& context, auto& holder) {
-				static constexpr auto Importance_Height = model::ImportanceHeight(1);
+			static constexpr model::ImportanceHeight Importance_Height(1);
 
+			PrepareRollbackTest<TTraits>([](const auto& addresses, const auto& context, auto& holder) {
 				// Act:
 				auto pCalculator = context.createReadCalculator({});
 				pCalculator->recalculate(Default_Calculation_Mode, Importance_Height, holder.get());

@@ -1,0 +1,2 @@
+compiler: ../compilers/gcc-8.yaml
+architecture: skylake

@@ -29,6 +29,13 @@ pipeline {
                         }
                     }
                 }
+                stage('gcc 8 [debian]') {
+                    steps {
+                        script {
+                            dispatch_build_base_image_job('gcc-8', 'debian', false)
+                        }
+                    }
+                }
                 stage('gcc 10 westmere') {
                     steps {
                         script {
@@ -86,6 +93,13 @@ pipeline {
                     steps {
                         script {
                             dispatch_prepare_base_image_job('test', 'ubuntu')
+                        }
+                    }
+                }
+                stage('test base image [debian]') {
+                    steps {
+                        script {
+                            dispatch_prepare_base_image_job('test', 'debian')
                         }
                     }
                 }
