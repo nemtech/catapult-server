@@ -1,6 +1,6 @@
 c: msvc
 cpp: bar
-version: 2019
+version: 16
 
 stl:
   version: baz

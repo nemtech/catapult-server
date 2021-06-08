@@ -23,6 +23,10 @@ class BasicBuildManager:
         return self.compiler.c.startswith('clang')
 
     @property
+    def is_msvc(self):
+        return self.compiler.c.startswith('msvc')
+
+    @property
     def is_release(self):
         return 'tests' != self.build_disposition
 

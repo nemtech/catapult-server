@@ -49,6 +49,46 @@ class LinuxEnvironment:
         self.dispatch_subprocess(['conan', 'install', '/catapult-src', '--build', 'missing'])
 
 
+class WindowsEnvironment:
+    def __init__(self, use_conan, process_manager, environment_manager):
+        self.use_conan = use_conan
+        self.dispatch_subprocess = process_manager.dispatch_subprocess
+        self.environment_manager = environment_manager
+
+    def prepare(self):
+        self._prepare_directory()
+        self._prepare_environment_variables()
+
+        #self.dispatch_subprocess(['ccache', '-M', '30G'])
+        #self.dispatch_subprocess(['ccache', '-s'])
+
+    def _prepare_directory(self):
+        self.environment_manager.mkdirs('/tmp/_build')
+        self.environment_manager.chdir('/tmp/_build')
+
+    def _prepare_environment_variables(self):
+        if self.use_conan:
+            self.environment_manager.set_env_var('HOME', '/conan')  # conan cache directory
+        else:
+            self.environment_manager.set_env_var('BOOST_ROOT', '/mybuild')
+            self.environment_manager.set_env_var('GTEST_ROOT', '/usr/local')
+
+    def prepare_conan(self, settings):
+        # create default profile if it does not exist
+        if self.dispatch_subprocess(['conan', 'profile', 'get', 'settings.compiler', 'default'], show_output=False, handle_error=False):
+            self.dispatch_subprocess(['conan', 'profile', 'new', 'default', '--detect'])
+
+        self.dispatch_subprocess(['conan', 'remote', 'add', '--force', 'nemtech', CONAN_NEMTECH_REMOTE])
+        self.dispatch_subprocess(['conan', 'config', 'set', 'general.revisions_enabled=True'])
+
+        for key, value in settings.items():
+            self.dispatch_subprocess(['conan', 'profile', 'update', 'settings.compiler.{}={}'.format(key, value), 'default'])
+
+    def run_conan_install(self):
+        # assuming working directory == build directory
+        self.dispatch_subprocess(['conan', 'install', '/catapult-src', '--build', 'missing'])
+
+
 class BuildManager(BasicBuildManager):
     def __init__(self, args, process_manager, environment_manager):
         super().__init__(args.compiler_configuration, args.build_configuration)
@@ -154,11 +194,17 @@ def main():
     environment_manager = EnvironmentManager(args.dry_run)
 
     builder = BuildManager(args, process_manager, environment_manager)
-    env = LinuxEnvironment(builder.use_conan, process_manager, environment_manager)
+    env_factory = LinuxEnvironment
+    conan_options = {'version': builder.compiler.version, 'libcxx': builder.stl.lib}
+    if builder.is_msvc:
+        env_factory = WindowsEnvironment
+        conan_options = {'version': builder.compiler.version}
+
+    env = env_factory(builder.use_conan, process_manager, environment_manager)
     env.prepare()
 
     if builder.use_conan:
-        env.prepare_conan({'version': builder.compiler.version, 'libcxx': builder.stl.lib})
+        env.prepare_conan(conan_options)
         env.run_conan_install()
 
     builder.run_cmake()

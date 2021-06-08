@@ -19,7 +19,6 @@ SRC_DIR = Path('catapult-src').resolve()
 OUTPUT_DIR = Path('output').resolve()
 BINARIES_DIR = OUTPUT_DIR / 'binaries'
 
-
 class OptionsManager(BasicBuildManager):
     def __init__(self, args):
         super().__init__(args.compiler_configuration, args.build_configuration)
@@ -56,10 +55,16 @@ class OptionsManager(BasicBuildManager):
 
     @property
     def conan_path(self):
-        return Path(CONAN_ROOT) / ('clang' if self.is_clang else 'gcc')
+        if self.is_clang:
+            return Path(CONAN_ROOT) / 'clang'
+
+        elif self.is_msvc:
+            return Path(CONAN_ROOT) / 'msvc'
+
+        return Path(CONAN_ROOT) / 'gcc'
 
     def docker_run_settings(self):
-        settings = [
+        settings = [] if self.is_msvc else [
             ('CC', self.compiler.c),
             ('CXX', self.compiler.cpp),
             ('CCACHE_DIR', '/ccache')
@@ -68,20 +73,22 @@ class OptionsManager(BasicBuildManager):
         return ['--env={}={}'.format(key, value) for key, value in sorted(settings)]
 
 
-def get_volume_mappings(ccache_path, conan_path):
-    mappings = [
-        (SRC_DIR, root_directory('catapult-src')),
-        (BINARIES_DIR.resolve(), root_directory('binaries')),
-        (conan_path, root_directory('conan')),
-        (ccache_path, root_directory('ccache'))
-    ]
+    def get_volume_mappings(self):
+        mappings = [
+            (SRC_DIR, root_directory('catapult-src')),
+            (BINARIES_DIR.resolve(), root_directory('binaries')),
+            (self.conan_path, root_directory('conan'))
+        ]
 
-    return ['--volume={}:{}'.format(str(key), value) for key, value in sorted(mappings)]
+        if not self.is_msvc:
+            mappings.append((self.ccache_path, root_directory('ccache')))
+
+        return ['--volume={}:{}'.format(str(key), value) for key, value in sorted(mappings)]
 
 
 def create_docker_run_command(options, compiler_configuration_filepath, build_configuration_filepath, user):
     docker_run_settings = options.docker_run_settings()
-    volume_mappings = get_volume_mappings(options.ccache_path, options.conan_path)
+    volume_mappings = options.get_volume_mappings()
 
     docker_args = [
         'docker', 'run',
