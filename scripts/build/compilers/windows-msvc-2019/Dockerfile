@@ -34,4 +34,4 @@ RUN powershell.exe -ExecutionPolicy RemoteSigned `
 RUN python3 -m pip install -U "conan>=1.33.0"
 
 # Start developer command prompt with any other commands specified.
-ENTRYPOINT ["C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&"]
+ENTRYPOINT ["C:\\BuildTools\\VC\\Auxiliary\\Build\\vcvars64.bat", "&&"]
