@@ -64,7 +64,7 @@ pipeline {
                     steps {
                         script {
                             dir ('scripts/build/compilers/windows-msvc-2019') {
-                                image_name = 'symbolplatform/symbol-server-build-base:windows-msvc-2019-conan'
+                                image_name = 'symbolplatform/symbol-server-build-base:windows-msvc-16-conan'
                                 docker.build(image_name)
 
                                 docker.withRegistry(DOCKER_URL, DOCKER_CREDENTIALS_ID) {
