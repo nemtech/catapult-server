@@ -99,7 +99,8 @@ class BuildManager(BasicBuildManager):
 
     def build(self):
         if 'win32' == sys.platform:
-            pass
+            self.dispatch_subprocess(['cmake', '--build', '.', '--target', 'publish'])
+            self.dispatch_subprocess(['msbuild', '/p:Configuration=RelWithDebInfo', '/p:Platform=x64', 'ALL_BUILD.vcxproj'])
         else:
             self.dispatch_subprocess(['ninja', 'publish'])
             self.dispatch_subprocess(['ninja'])
