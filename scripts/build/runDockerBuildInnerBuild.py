@@ -65,9 +65,12 @@ class BuildManager(BasicBuildManager):
             ('CMAKE_BUILD_TYPE', self.build_configuration),
             ('CATAPULT_TEST_DB_URL', 'mongodb://db:27017'),
             ('CATAPULT_DOCKER_TESTS', 'ON'),
-            ('ENABLE_CODE_COVERAGE', 'OFF'),
-            ('ARCHITECTURE_NAME', self.architecture)
+            ('ENABLE_CODE_COVERAGE', 'OFF')
         ]
+
+        if 'win32' != sys.platform:
+            # ARCHITECTURE_NAME is used to set `-march`, disable on windows
+            settings.append(('ARCHITECTURE_NAME', self.architecture))
 
         if self.enable_diagnostics:
             settings.append(('ENABLE_CATAPULT_DIAGNOSTICS', 'ON'))
