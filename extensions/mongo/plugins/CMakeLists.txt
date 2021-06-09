@@ -37,7 +37,8 @@ function(catapult_mongo_plugin_tests_with_header_only_deps TARGET_NAME)
 	catapult_test_executable_target(${TARGET_NAME} mongo "${ARGN}")
 	catapult_add_mongo_dependencies(${TARGET_NAME})
 	target_link_libraries(${TARGET_NAME} catapult.plugins.${PLUGIN_NAME}.deps)
-	target_link_libraries(${TARGET_NAME} catapult.mongo.plugins.${PLUGIN_NAME}.deps)
+	# there's dependency on plugin, so dependency on .deps should not be needed?
+	# target_link_libraries(${TARGET_NAME} catapult.mongo.plugins.${PLUGIN_NAME}.deps)
 
 	if(TARGET "tests.catapult.test.plugins.${PLUGIN_NAME}")
 		target_link_libraries(${TARGET_NAME} tests.catapult.test.plugins.${PLUGIN_NAME})
