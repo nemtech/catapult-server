@@ -171,19 +171,19 @@ def main():
         print(options.prepare_base_image_name)
         return
 
-    print('*** *** *** *** *** ***')
-    print('SRC_DIR:       {}'.format(SRC_DIR))
-    print('OUTPUT_DIR:    {}'.format(OUTPUT_DIR))
-    print('BINARIES_DIR:  {}'.format(BINARIES_DIR))
-    print('*** *** *** *** *** ***')
-
-    docker_run = create_docker_run_command(options, args.compiler_configuration, args.build_configuration, args.user)
-
     environment_manager = EnvironmentManager(args.dry_run)
     environment_manager.rmtree(OUTPUT_DIR)
     environment_manager.mkdirs(BINARIES_DIR)
     environment_manager.mkdirs(options.ccache_path / 'tmp', exist_ok=True)
     environment_manager.mkdirs(options.conan_path, exist_ok=True)
+
+    print('*** *** *** *** *** ***')
+    print('SRC_DIR:       {}'.format(SRC_DIR))
+    print('OUTPUT_DIR:    {}'.format(OUTPUT_DIR.resolve()))
+    print('BINARIES_DIR:  {}'.format(BINARIES_DIR.resolve()))
+    print('*** *** *** *** *** ***')
+
+    docker_run = create_docker_run_command(options, args.compiler_configuration, args.build_configuration, args.user)
 
     print('building project')
 
