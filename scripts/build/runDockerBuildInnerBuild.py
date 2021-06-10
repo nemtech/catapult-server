@@ -127,6 +127,9 @@ class BuildManager(BasicBuildManager):
             self.environment_manager.copy_glob_with_symlinks(system_bin_path, 'lib{}.so*'.format(name), destination)
 
     def copy_compiler_deps(self, destination):
+        if not self.compiler.deps:
+            return
+
         for dependency_pattern in self.compiler.deps:
             directory_path = os.path.dirname(dependency_pattern)
             pattern = os.path.basename(dependency_pattern)
@@ -153,6 +156,8 @@ class BuildManager(BasicBuildManager):
         if not self.is_release:
             self.environment_manager.mkdirs(tests_output_path)
             self.environment_manager.copy_glob_with_symlinks('./bin', 'tests*', tests_output_path)
+            if 'win32' == sys.platform:
+                self.environment_manager.copy_glob_with_symlinks('./bin', '*.dll', tests_output_path)
 
         # list directories
         self.dispatch_subprocess(['ls', '-alh', deps_output_path])
