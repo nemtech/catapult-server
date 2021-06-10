@@ -103,13 +103,10 @@ class BuildManager(BasicBuildManager):
 
     def build(self):
         if 'win32' == sys.platform:
-            #self.dispatch_subprocess(['cmake', '--build', '.', '--target', 'publish'])
-            #self.dispatch_subprocess(['msbuild', '/p:Configuration=RelWithDebInfo', '/p:Platform=x64', '/maxcpucount:8', 'ALL_BUILD.vcxproj'])
-            #self.dispatch_subprocess(['cmd', '/c', 'dir'])
-            with open('INSTALL.vcxproj', encoding='utf-8-sig') as input_file:
-                shutil.copyfileobj(input_file, sys.stdout)
-
-            #self.dispatch_subprocess(['msbuild', 'INSTALL.vcxproj'])
+            self.dispatch_subprocess(['cmake', '--build', '.', '--target', 'publish'])
+            self.dispatch_subprocess(['msbuild', '/p:Configuration=RelWithDebInfo', '/p:Platform=x64', '/maxcpucount:8', 'ALL_BUILD.vcxproj'])
+            self.dispatch_subprocess(['cmd', '/c', 'dir'])
+            self.dispatch_subprocess(['cmd', '/c', 'dir', 'bin'])
         else:
             self.dispatch_subprocess(['ninja', 'publish'])
             self.dispatch_subprocess(['ninja'])
@@ -117,7 +114,8 @@ class BuildManager(BasicBuildManager):
 
     def copy_dependencies(self, destination):
         if self.use_conan:
-            self.environment_manager.copy_tree_with_symlinks('./deps', destination)
+            if 'win32' != sys.platform:
+                self.environment_manager.copy_tree_with_symlinks('./deps', destination)
             return
 
         self.environment_manager.mkdirs(destination)
