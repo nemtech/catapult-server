@@ -103,10 +103,10 @@ class BuildManager(BasicBuildManager):
 
     def build(self):
         if 'win32' == sys.platform:
-            self.dispatch_subprocess(['cmake', '--build', '.', '--target', 'publish'])
-            self.dispatch_subprocess(['msbuild', '/p:Configuration=RelWithDebInfo', '/p:Platform=x64', '/maxcpucount:8', 'ALL_BUILD.vcxproj'])
-            self.dispatch_subprocess(['cmd', '/c', 'dir'])
-            self.dispatch_subprocess(['msbuild', 'INSTALL.vcxproj'])
+            #self.dispatch_subprocess(['cmake', '--build', '.', '--target', 'publish'])
+            #self.dispatch_subprocess(['msbuild', '/p:Configuration=RelWithDebInfo', '/p:Platform=x64', '/maxcpucount:8', 'ALL_BUILD.vcxproj'])
+            #self.dispatch_subprocess(['cmd', '/c', 'dir'])
+            #self.dispatch_subprocess(['msbuild', 'INSTALL.vcxproj'])
             self.dispatch_subprocess(['cmd', '/c', 'type', 'INSTALL.vcxproj'])
         else:
             self.dispatch_subprocess(['ninja', 'publish'])
