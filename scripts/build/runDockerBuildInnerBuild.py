@@ -1,5 +1,6 @@
 import argparse
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -105,7 +106,10 @@ class BuildManager(BasicBuildManager):
             self.dispatch_subprocess(['cmake', '--build', '.', '--target', 'publish'])
             self.dispatch_subprocess(['msbuild', '/p:Configuration=RelWithDebInfo', '/p:Platform=x64', '/maxcpucount:8', 'ALL_BUILD.vcxproj'])
             self.dispatch_subprocess(['cmd', '/c', 'dir'])
-            self.dispatch_subprocess(['cmake', 'install'])
+            with open('INSTALL.vcxproj') as input_file:
+                shutil.copyfileobj(input_file, sys.stdout)
+
+            self.dispatch_subprocess(['msbuild', 'INSTALL.vcxproj'])
         else:
             self.dispatch_subprocess(['ninja', 'publish'])
             self.dispatch_subprocess(['ninja'])
