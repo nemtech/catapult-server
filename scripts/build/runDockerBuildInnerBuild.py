@@ -160,7 +160,8 @@ class BuildManager(BasicBuildManager):
                 self.environment_manager.copy_glob_with_symlinks('./bin', '*.dll', tests_output_path)
 
         # list directories
-        self.dispatch_subprocess(['ls', '-alh', deps_output_path])
+        if 'win32' != sys.platform:
+            self.dispatch_subprocess(['ls', '-alh', deps_output_path])
 
         if not self.is_release:
             self.dispatch_subprocess(['ls', '-alh', tests_output_path])
