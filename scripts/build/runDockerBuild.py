@@ -140,7 +140,7 @@ def prepare_docker_image(process_manager, container_id, prepare_replacements):
         'docker', 'run',
         '--cidfile={}'.format(cid_filepath),
         '--volume={}:{}'.format(SRC_DIR / 'scripts' / 'build', root_directory('scripts')),
-        '--volume={}:{}'.format(OUTPUT_DIR, root_directory('data')),
+        '--volume={}:{}'.format(OUTPUT_DIR.resolve(), root_directory('data')),
         'registry.hub.docker.com/{}'.format(prepare_replacements['base_image_name']),
         'python3', '/scripts/runDockerBuildInnerPrepare.py',
         '--disposition={}'.format(build_disposition)
