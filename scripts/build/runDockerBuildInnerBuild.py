@@ -31,9 +31,12 @@ class BuildEnvironment:
 
     def _prepare_environment_variables(self):
         if self.use_conan:
-            self.environment_manager.set_env_var('HOME', '/conan')  # conan cache directory
-            if 'win32' == sys.platform:
-                self.environment_manager.set_env_var('CONAN_USER_HOME', 'd:\\')  # conan cache directory
+            # conan cache directory
+            if 'win32' != sys.platform:
+                self.environment_manager.set_env_var('HOME', '/conan')
+            else:
+                self.environment_manager.set_env_var('CONAN_USER_HOME', 'd:\\')
+                self.environment_manager.mkdirs('d:\\.conan')
         else:
             self.environment_manager.set_env_var('BOOST_ROOT', '/mybuild')
             self.environment_manager.set_env_var('GTEST_ROOT', '/usr/local')
