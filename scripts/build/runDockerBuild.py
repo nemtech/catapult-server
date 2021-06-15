@@ -59,7 +59,7 @@ class OptionsManager(BasicBuildManager):
             return Path(CONAN_ROOT) / 'clang'
 
         elif self.is_msvc:
-            return Path(CONAN_ROOT) / 'msvc'
+            return Path('d:') / 'msvc'
 
         return Path(CONAN_ROOT) / 'gcc'
 
