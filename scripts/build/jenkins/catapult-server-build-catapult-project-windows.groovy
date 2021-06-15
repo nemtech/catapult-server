@@ -96,7 +96,6 @@ pipeline {
                     steps {
                         script {
                             bat 'set'
-                            sh 'docker run --rm hello-world'
                             run_docker_build_command = """
                                 python catapult-src/scripts/build/runDockerBuild.py \
                                     --compiler-configuration catapult-src/scripts/build/configurations/${COMPILER_CONFIGURATION}.yaml \
