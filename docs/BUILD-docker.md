@@ -31,10 +31,10 @@ Launch it from the parent folder of ``catapult-src``:
 
 ```bash
 python3 catapult-src/scripts/build/runDockerBuild.py \
-    --compiler-configuration catapult-src/scripts/build/configurations/gcc-10.yaml
-    --build-configuration catapult-src/scripts/build/configurations/release-private.yaml
-    --operating-system ubuntu
-    --user "$(id -u):$(id -g)"
+    --compiler-configuration catapult-src/scripts/build/configurations/gcc-10.yaml \
+    --build-configuration catapult-src/scripts/build/configurations/release-private.yaml \
+    --operating-system ubuntu \
+    --user "$(id -u):$(id -g)" \
     --destination-image-label gcc-10-main-9273d6c5
 ```
 
@@ -144,7 +144,7 @@ Note also that the architecture is defined in ``configurations/gcc-10.yaml`` as 
    python3 ./scripts/build/baseImageDockerfileGenerator.py \
        --compiler-configuration scripts/build/configurations/gcc-10.yaml \
        --operating-system ubuntu \
-       --versions ./scripts/build/versions.properties
+       --versions ./scripts/build/versions.properties \
        --layer os
    ```
 
