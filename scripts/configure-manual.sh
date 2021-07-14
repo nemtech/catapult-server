@@ -10,7 +10,7 @@ Options:
     -j <number>          Parallel compilation jobs. Default is $jobs
 
 Available commands:
-    system_reqs          Installs apt dependencies. Requires sudo.
+    install system_reqs          Installs apt dependencies. Requires sudo.
                          debian packages: $debs
     download deps        Obtain 3rd party libs.
     install deps         Compile & install 3rd party libs.
@@ -26,14 +26,17 @@ EOF
 }
 
 function set_depsdir {
-	depsdir=$CAT_DEPS_DIR
-	boost_output_dir=$depsdir/boost
 	if [ "_$CAT_DEPS_DIR" == "_" ]; then
 		CAT_DEPS_DIR="$HOME/cat_deps_dir"
-		depsdir=$CAT_DEPS_DIR
 		echo "CAT_DEPS_DIR not found in env. Using default: $CAT_DEPS_DIR."
 		warn_env=1
 	fi
+	depsdir=$CAT_DEPS_DIR
+	if [[ "_$depsdir" == "_" ]]; then
+		echo "Error depsdir empty."
+		exit 1
+	fi
+	boost_output_dir=$depsdir/boost
 }
 
 function exitok {
@@ -66,7 +69,7 @@ function download_boost {
 }
 
 function download_git_dependency {
-	git "clone git://github.com/${1}/${2}.git"
+	git clone git://github.com/${1}/${2}.git
 	cd "${2}"
 	git checkout "${3}"
 	cd ..
@@ -184,7 +187,7 @@ function install_system_reqs {
 	set -e
 	apt update
 	apt -y upgrade
-	apt -y install "$debs"
+	apt -y install $debs
 	set +e
 }
 
