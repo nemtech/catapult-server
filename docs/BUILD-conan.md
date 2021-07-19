@@ -40,10 +40,21 @@ Following instructions should work on Mac, Linux (Ubuntu 20.04) and Windows.
   2. Install build dependencies:
 
      ```sh
-     brew install git cmake ninja
+     brew install git cmake ninja pkg-config
      ```
 
   3. Install [Conan](https://conan.io/downloads.html).
+
+  4. Set the right config for Conan (Only for Mac M1):
+
+      ```sh
+      conan profile new default --detect
+      conan config set general.revisions_enabled=True
+      ```
+
+  5. Modify `conanfile.txt` (Only for Mac M1):
+      - Change `boost:without_math=True`.
+      - Add `rocksdb:enable_sse = False` under `rocksdb:shared = True`.
 
 ## Step 1: Build dependencies
 
